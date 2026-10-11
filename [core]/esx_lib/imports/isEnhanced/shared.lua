@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 local ENHANCED_GAME_NAMES <const> = {
     ["gta5enhanced"] = true,
     ["gta5_enhanced"] = true

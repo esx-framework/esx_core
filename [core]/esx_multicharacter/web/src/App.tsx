@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2022-2026 ESX Framework
+ */
+
 import CharacterSelection from "./components/CharacterSelection";
 import { useState, useEffect } from "react";
 import { useNuiEvent } from "./utils/useNuiEvent";
@@ -21,9 +26,9 @@ function App() {
 
   useNuiEvent("ToggleMulticharacter", (data: any) => {
     if (data.show) {
-      const validCharacters = data.Characters.filter(
-        (char: any) => char !== null
-      );
+      const validCharacters = Object.values(data.Characters || {}).filter(
+        (char: any) => char && char.id != null
+      ).sort((left: any, right: any) => Number(left.id) - Number(right.id));
       const parsedCharacters: Character[] = validCharacters.map(
         (char: any, index: number) => ({
           id: char.id.toString(),
@@ -31,7 +36,7 @@ function App() {
           birthDate: char.dateofbirth,
           gender: char.sex,
           occupation: char.job,
-          disabled: char.disabled,
+          disabled: char.disabled === true || char.disabled === 1 || char.disabled === "1",
           isActive: index === 0,
         })
       );

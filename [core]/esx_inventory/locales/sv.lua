@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "Inventory ( Vikt %s / %s )",
     ["use"] = "Använd",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "Inventoryt är fullt, kan inte plocka upp!",
     ["threw_pickup_prompt"] = "Tryck E för att plocka upp",
     ["keymap_showinventory"] = "Öppna inventory",
+    ["player_inventory"] = "Inventarie",
+    ["storage"] = "Förvaring",
+    ["storage_full"] = "Förvaringen är full",
+    ["weight"] = "Vikt",
+    ["take"] = "Ta",
+    ["nearby_players"] = "Spelare i närheten",
+    ["added_to_inventory"] = "Tillagd i inventariet",
+    ["removed_from_inventory"] = "Borttagen från inventariet",
+    ["keymap_hotbar"] = "Använd snabbplats %s",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

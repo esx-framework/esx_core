@@ -1,24 +1,43 @@
---[[
-    Generic client-side player state cache, modelled on ox_lib cache.
-    Framework agnostic: natives only, no ESX coupling.
-
-    Loaded per-resource VM through the lazy loader. PlayerPedId() and friends
-    return the same value in every client VM, so the cached values are correct
-    in each resource that requires it.
-
-    Exposes the live values as xLib.cache and emits `xLib:cache:<key>` (value, previous)
-    whenever a tracked value changes. `coords` is read on demand from the live ped
-    and never stored.
-]]
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
 
 local playerId = PlayerId()
 
+---@param ped integer
+---@param vehicle integer
+---@return integer|false
+local function getSeat(ped, vehicle)
+    for seat = -1, 16 do
+        if GetPedInVehicleSeat(vehicle, seat) == ped then
+            return seat
+        end
+    end
+    return false
+end
+
+---@param ped integer
+---@return integer|false
+local function getVehicle(ped)
+    local vehicle = GetVehiclePedIsIn(ped, false)
+    return vehicle ~= 0 and vehicle or false
+end
+
+---@param ped integer
+---@return integer|false
+local function getWeapon(ped)
+    local weapon = GetSelectedPedWeapon(ped)
+    return weapon ~= `WEAPON_UNARMED` and weapon or false
+end
+
+local initialPed = PlayerPedId()
+local initialVehicle = getVehicle(initialPed)
+
 local cache = setmetatable({
     playerId = playerId,
-    ped = PlayerPedId(),
-    vehicle = false,
-    seat = false,
-    weapon = false,
+    ped = initialPed,
+    vehicle = initialVehicle,
+    seat = initialVehicle and getSeat(initialPed, initialVehicle) or false,
+    weapon = getWeapon(initialPed),
 }, {
     __index = function(self, key)
         if key == "coords" then
@@ -35,6 +54,25 @@ local cache = setmetatable({
     end,
 })
 
+local TRACKED_KEYS <const> = { "ped", "vehicle", "seat", "weapon" }
+
+if GetCurrentResourceName() ~= xLib.name then
+    for i = 1, #TRACKED_KEYS do
+        local key = TRACKED_KEYS[i]
+        AddEventHandler(("xLib:cache:%s"):format(key), function(value)
+            rawset(cache, key, value)
+        end)
+    end
+
+    return cache
+end
+
+for i = 1, #TRACKED_KEYS do
+    rawset(cache, TRACKED_KEYS[i], nil)
+end
+
+---@param key string
+---@param value any
 local function set(key, value)
     if cache[key] == value then
         return
@@ -45,15 +83,6 @@ local function set(key, value)
     TriggerEvent(("xLib:cache:%s"):format(key), value, previous)
 end
 
-local function getSeat(ped, vehicle)
-    for seat = -1, 16 do
-        if GetPedInVehicleSeat(vehicle, seat) == ped then
-            return seat
-        end
-    end
-    return false
-end
-
 CreateThread(function()
     while true do
         local ped = PlayerPedId()
@@ -61,9 +90,7 @@ CreateThread(function()
             set("ped", ped)
         end
 
-        ---@type integer|false
-        local vehicle = GetVehiclePedIsIn(ped, false)
-        vehicle = vehicle ~= 0 and vehicle or false
+        local vehicle = getVehicle(ped)
 
         if vehicle ~= cache.vehicle then
             set("vehicle", vehicle)
@@ -75,9 +102,7 @@ CreateThread(function()
             end
         end
 
-        ---@type integer|false
-        local weapon = GetSelectedPedWeapon(ped)
-        weapon = weapon ~= `WEAPON_UNARMED` and weapon or false
+        local weapon = getWeapon(ped)
         if weapon ~= cache.weapon then
             set("weapon", weapon)
         end

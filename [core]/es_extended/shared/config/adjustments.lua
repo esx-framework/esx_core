@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 Config.DisableHealthRegeneration = false -- Player will no longer regenerate health
 Config.DisableVehicleRewards = false -- Disables Player Receiving weapons from vehicles
 Config.DisableNPCDrops = false -- stops NPCs from dropping weapons on death

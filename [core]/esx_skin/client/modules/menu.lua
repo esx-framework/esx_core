@@ -1,9 +1,14 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 Menu = {}
 Menu._index = Menu
 
 Menu.isOpen = false
 Menu.saveable = false
 Menu.focusIndex = 1
+
+local DRAG_DEGREES_PER_SCREEN <const> = 360.0
 
 local function round(value)
     return math.floor((tonumber(value) or 0) + 0.5)
@@ -19,7 +24,7 @@ local function normalizeNumber(value, fallback)
 end
 
 local function normalizeString(value)
-    if type(value) ~= "string" or value == "" or #value > 64 then
+    if type(value) ~= 'string' or value == '' or #value > 64 then
         return nil
     end
 
@@ -88,13 +93,13 @@ local function createMenuHandle()
             Menu:Close()
         end,
         update = function(_, element)
-            if type(element) == "table" and element.name then
+            if type(element) == 'table' and element.name then
                 Menu:UpdateElement(element.name, element)
             end
         end,
         refresh = function()
             Menu:Refresh()
-        end
+        end,
     }
 end
 
@@ -140,7 +145,7 @@ end
 
 function Menu:InsertElements()
     local playerPed = PlayerPedId()
-    local currentSkin = exports["skinchanger"]:GetSkin()
+    local currentSkin = exports['skinchanger']:GetSkin()
 
     self.elements = {}
     for i = 1, #self.components, 1 do
@@ -151,13 +156,13 @@ function Menu:InsertElements()
             value = component.value
         end
 
-        if component.componentId == 0 and component.name == "helmet_1" then
+        if component.componentId == 0 and component.name == 'helmet_1' then
             value = GetPedPropIndex(playerPed, component.componentId)
         end
 
         local data = table.clone(component)
         data.value = round(value)
-        data.type = "slider"
+        data.type = 'slider'
         data.min = normalizeNumber(data.min, 0)
         data.max = safeMax(self.maxValues and self.maxValues[component.name] or data.max)
 
@@ -171,23 +176,23 @@ function Menu:InsertElements()
 end
 
 function Menu:BuildPayload(activeName)
-    local submitLabel = "CONFIRM"
+    local submitLabel = 'CONFIRM'
 
     if self.saveable and self.creating then
-        submitLabel = "CREATE CHARACTER"
+        submitLabel = 'CREATE CHARACTER'
     elseif self.saveable then
-        submitLabel = "SAVE CHANGES"
+        submitLabel = 'SAVE CHANGES'
     end
 
     return {
-        action = "skinMenu:open",
-        title = TranslateCap("skin_menu"),
+        action = 'skinMenu:open',
+        title = TranslateCap('skin_menu'),
         submitLabel = submitLabel,
         active = activeName or (self.elements[1] and self.elements[1].name) or nil,
         elements = self.elements or {},
         saveable = self.saveable == true,
         creating = self.creating == true,
-        restricted = self.restricted ~= nil
+        restricted = self.restricted ~= nil,
     }
 end
 
@@ -196,7 +201,7 @@ function Menu:Refresh(activeName)
         return
     end
 
-    SendNUIMessage(self:BuildPayload(activeName))
+    xLib.nui.send(self:BuildPayload(activeName))
 end
 
 function Menu:UpdateElement(name, element)
@@ -210,28 +215,31 @@ end
 
 function Menu:Close()
     if self.isOpen then
-        SendNUIMessage({ action = "skinMenu:close" })
+        xLib.nui.send({ action = 'skinMenu:close' })
     end
 
-    SetNuiFocus(false, false)
-    SetNuiFocusKeepInput(false)
+    xLib.nui.focus(false, false, false)
     Camera:Destroy()
 
     self.isOpen = false
 end
 
 function Menu:Submit(data)
-    if not self.isOpen then
+    if not self.isOpen or self.saving then
         return
     end
 
-    local current = self:GetElement(type(data) == "table" and data.name or nil) or self.elements[self.focusIndex] or self.elements[1]
+    local current = self:GetElement(type(data) == 'table' and data.name or nil)
+        or self.elements[self.focusIndex]
+        or self.elements[1]
     local payload = {
         current = current,
-        elements = self.elements
+        elements = self.elements,
     }
 
-    self:Close()
+    if not self.saveable then
+        self:Close()
+    end
 
     if self.submitCb then
         self.submitCb(payload, createMenuHandle())
@@ -239,20 +247,22 @@ function Menu:Submit(data)
 end
 
 function Menu:Cancel(data)
-    if not self.isOpen then
+    if not self.isOpen or self.saving then
         return
     end
 
-    local current = self:GetElement(type(data) == "table" and data.name or nil) or self.elements[self.focusIndex] or self.elements[1]
+    local current = self:GetElement(type(data) == 'table' and data.name or nil)
+        or self.elements[self.focusIndex]
+        or self.elements[1]
     local payload = {
         current = current,
-        elements = self.elements
+        elements = self.elements,
     }
 
     self:Close()
 
     if Skin.Last then
-        TriggerEvent("skinchanger:loadSkin", Skin.Last)
+        TriggerEvent('skinchanger:loadSkin', Skin.Last)
     end
 
     if self.cancelCb then
@@ -266,7 +276,7 @@ function Menu:RebuildAfterModelChange(activeName)
             return
         end
 
-        self.components, self.maxValues = exports["skinchanger"]:GetData()
+        self.components, self.maxValues = exports['skinchanger']:GetData()
         if self.restricted then
             self.components = self:Restrict()
         end
@@ -288,19 +298,24 @@ function Menu:UpdateTextureLimits(changedName, skin)
 
             local current = element.value
 
-            if current == nil or current < (element.min or 0) or current > element.max or (element.max or 0) < (element.min or 0) then
+            if
+                current == nil
+                or current < (element.min or 0)
+                or current > element.max
+                or (element.max or 0) < (element.min or 0)
+            then
                 current = wrapValue(element.min or 0, element.min or 0, element.max or 0)
             end
 
             element.value = current
-            exports["skinchanger"]:Change(element.name, element.value)
+            exports['skinchanger']:Change(element.name, element.value)
             skin[element.name] = element.value
         end
     end
 end
 
 function Menu:Focus(data)
-    local name = normalizeString(type(data) == "table" and data.name or nil)
+    local name = normalizeString(type(data) == 'table' and data.name or nil)
     local index = self:FindElementIndex(name)
     if not index then
         return
@@ -313,15 +328,15 @@ function Menu:Focus(data)
 end
 
 function Menu:Apply(values)
-    if not self.isOpen or type(values) ~= "table" then
+    if not self.isOpen or type(values) ~= 'table' then
         return
     end
 
-    local skin = exports["skinchanger"]:GetSkin()
+    local skin = exports['skinchanger']:GetSkin()
     local changedNames = {}
 
     for name, value in pairs(values) do
-        if type(name) == "string" and type(value) == "number" and value == value then
+        if type(name) == 'string' and type(value) == 'number' and value == value then
             local element = self:GetElement(name)
 
             if element then
@@ -329,7 +344,7 @@ function Menu:Apply(values)
                 element.value = normalized
 
                 if skin[name] ~= normalized then
-                    exports["skinchanger"]:Change(name, normalized)
+                    exports['skinchanger']:Change(name, normalized)
                     skin[name] = normalized
                     changedNames[#changedNames + 1] = name
                 end
@@ -343,7 +358,7 @@ function Menu:Apply(values)
 
     local changedSex = false
     for i = 1, #changedNames, 1 do
-        if changedNames[i] == "sex" then
+        if changedNames[i] == 'sex' then
             changedSex = true
             break
         end
@@ -361,7 +376,11 @@ function Menu:Apply(values)
 end
 
 function Menu:Change(data)
-    if not self.isOpen or type(data) ~= "table" then
+    if self.saving then
+        return
+    end
+
+    if not self.isOpen or type(data) ~= 'table' then
         return
     end
 
@@ -376,12 +395,12 @@ function Menu:Change(data)
 
     self:Focus({ name = name })
 
-    local skin = exports["skinchanger"]:GetSkin()
+    local skin = exports['skinchanger']:GetSkin()
     if skin[name] ~= value then
-        exports["skinchanger"]:Change(name, value)
+        exports['skinchanger']:Change(name, value)
         skin[name] = value
 
-        if name == "sex" then
+        if name == 'sex' then
             self:RebuildAfterModelChange(name)
         elseif not element.textureof then
             self:UpdateTextureLimits(name, skin)
@@ -392,12 +411,16 @@ function Menu:Change(data)
 end
 
 function Menu:Reset()
-    if not self.isOpen or not Skin.Last then
+    if not self.isOpen or self.saving then
         return
     end
 
-    TriggerEvent("skinchanger:loadSkin", Skin.Last, function()
-        self.components, self.maxValues = exports["skinchanger"]:GetData()
+    if not Skin.Last then
+        return
+    end
+
+    TriggerEvent('skinchanger:loadSkin', Skin.Last, function()
+        self.components, self.maxValues = exports['skinchanger']:GetData()
         if self.restricted then
             self.components = self:Restrict()
         end
@@ -407,7 +430,7 @@ function Menu:Reset()
 end
 
 function Menu:Rotate(direction)
-    direction = direction == "left" and -1 or 1
+    direction = direction == 'left' and -1 or 1
     Skin.heading = Skin.heading + (direction * 18.0)
 
     if Skin.heading > 360 then
@@ -417,17 +440,28 @@ function Menu:Rotate(direction)
     end
 end
 
+---@param delta number
+function Menu:Drag(delta)
+    delta = normalizeNumber(delta, 0)
+    if not self.isOpen or delta == 0 then
+        return
+    end
+
+    delta = math.max(-1.0, math.min(1.0, delta))
+    Skin.heading = (Skin.heading - delta * DRAG_DEGREES_PER_SCREEN) % 360
+end
+
 function Menu:SetCameraPreset(preset)
-    if preset == "face" then
+    if preset == 'face' then
         Skin.zoomOffset = 0.4
         Skin.camOffset = 0.65
-    elseif preset == "legs" then
+    elseif preset == 'legs' then
         Skin.zoomOffset = 0.8
         Skin.camOffset = -0.65
-    elseif preset == "shoes" then
+    elseif preset == 'shoes' then
         Skin.zoomOffset = 0.75
         Skin.camOffset = -0.95
-    elseif preset == "torso" then
+    elseif preset == 'torso' then
         Skin.zoomOffset = 0.75
         Skin.camOffset = 0.15
     else
@@ -437,15 +471,19 @@ function Menu:SetCameraPreset(preset)
 end
 
 function Menu:Open(submit, cancel, restrict)
+    if self.saving then
+        return
+    end
+
     self.submitCb = submit
     self.cancelCb = cancel
     self.restricted = restrict
     self.saveable = false
     self.creating = false
     self.focusIndex = 1
-    Skin.Last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports['skinchanger']:GetSkin()
 
-    self.components, self.maxValues = exports["skinchanger"]:GetData()
+    self.components, self.maxValues = exports['skinchanger']:GetData()
     if restrict then
         self.components = self:Restrict()
     end
@@ -461,25 +499,35 @@ function Menu:Open(submit, cancel, restrict)
     Camera:Create()
 
     self.isOpen = true
-    SetNuiFocus(true, true)
-    SetNuiFocusKeepInput(false)
+    xLib.nui.focus(true, true, false)
     CreateThread(blockInputThread)
-    SendNUIMessage(self:BuildPayload(self.elements[1].name))
+    xLib.nui.send(self:BuildPayload(self.elements[1].name))
 end
 
 function Menu:Saveable(submitCb, cancelCb, restrict, creating)
-    Skin.Last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports['skinchanger']:GetSkin()
 
     self:Open(function(data, menu)
-        menu.close()
-        Camera:Destroy()
+        local skin = exports['skinchanger']:GetSkin()
+        self.saving = true
 
-        local skin = exports["skinchanger"]:GetSkin()
-        TriggerServerEvent("esx_skin:save", skin)
+        xLib.callback('esx_skin:save', false, function(saved, reason)
+            self.saving = false
 
-        if submitCb ~= nil then
-            submitCb(data, menu)
-        end
+            if saved ~= true then
+                print(('[esx_skin] Appearance save failed: %s'):format(reason or 'unknown'))
+                ESX.ShowNotification(TranslateCap('skin_save_failed'))
+                return
+            end
+
+            Skin.Last = skin
+            menu.close()
+            Camera:Destroy()
+
+            if submitCb ~= nil then
+                submitCb(data, menu)
+            end
+        end, skin)
     end, cancelCb, restrict)
 
     self.saveable = true
@@ -487,42 +535,47 @@ function Menu:Saveable(submitCb, cancelCb, restrict, creating)
     self:Refresh(self.elements and self.elements[1] and self.elements[1].name or nil)
 end
 
-RegisterNUICallback("skinMenu:change", function(data, cb)
+xLib.nui.register('skinMenu:change', function(data)
     Menu:Change(data)
-    cb({ ok = true })
+    return { ok = true }
 end)
 
-RegisterNUICallback("skinMenu:focus", function(data, cb)
+xLib.nui.register('skinMenu:focus', function(data)
     Menu:Focus(data)
-    cb({ ok = true })
+    return { ok = true }
 end)
 
-RegisterNUICallback("skinMenu:submit", function(data, cb)
+xLib.nui.register('skinMenu:submit', function(data)
     Menu:Submit(data)
-    cb({ ok = true })
+    return { ok = true }
 end)
 
-RegisterNUICallback("skinMenu:cancel", function(data, cb)
+xLib.nui.register('skinMenu:cancel', function(data)
     Menu:Cancel(data)
-    cb({ ok = true })
+    return { ok = true }
 end)
 
-RegisterNUICallback("skinMenu:reset", function(_, cb)
+xLib.nui.register('skinMenu:reset', function()
     Camera:Reset()
-    cb({ ok = true })
+    return { ok = true }
 end)
 
-RegisterNUICallback("skinMenu:rotate", function(data, cb)
-    Menu:Rotate(type(data) == "table" and data.direction or "right")
-    cb({ ok = true })
+xLib.nui.register('skinMenu:rotate', function(data)
+    Menu:Rotate(type(data) == 'table' and data.direction or 'right')
+    return { ok = true }
 end)
 
-RegisterNUICallback("skinMenu:camera", function(data, cb)
-    Menu:SetCameraPreset(type(data) == "table" and data.preset or "full")
-    cb({ ok = true })
+xLib.nui.register('skinMenu:drag', function(data)
+    Menu:Drag(type(data) == 'table' and data.delta or 0)
+    return { ok = true }
 end)
 
-RegisterNUICallback("skinMenu:apply", function(data, cb)
-    Menu:Apply(type(data) == "table" and data.values or {})
-    cb({ ok = true })
+xLib.nui.register('skinMenu:camera', function(data)
+    Menu:SetCameraPreset(type(data) == 'table' and data.preset or 'full')
+    return { ok = true }
+end)
+
+xLib.nui.register('skinMenu:apply', function(data)
+    Menu:Apply(type(data) == 'table' and data.values or {})
+    return { ok = true }
 end)

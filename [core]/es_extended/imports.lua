@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 ESX = exports["es_extended"]:getSharedObject()
 ESX.currentResourceName = GetCurrentResourceName()
 
@@ -49,21 +52,56 @@ if not IsDuplicityVersion() then -- Only register this event for the client
     end)
 
     if not ESX.GetConfig("CustomInventory") then
-        ESX.SecureNetEvent("esx:addInventoryItem", function(item, count, showNotification)
+        ESX.SecureNetEvent("esx:addInventoryItem", function(item, count, showNotification, itemData)
+            if type(count) ~= "number" then
+                return
+            end
+
+            local found = false
+            local previous = ESX.PlayerData.inventory
+
             for i = 1, #ESX.PlayerData.inventory do
                 if ESX.PlayerData.inventory[i].name == item then
                     ESX.PlayerData.inventory[i].count = count
+                    found = true
                     break
                 end
+            end
+
+            if not found then
+                ESX.PlayerData.inventory[#ESX.PlayerData.inventory + 1] = {
+                    name = item,
+                    count = count,
+                    label = type(itemData) == "table" and itemData.label or item,
+                    weight = type(itemData) == "table" and itemData.weight or 0,
+                    usable = type(itemData) == "table" and itemData.usable == true or false,
+                    rare = type(itemData) == "table" and itemData.rare == true or false,
+                    canRemove = type(itemData) ~= "table" or itemData.canRemove ~= false,
+                }
+            end
+
+            if OnPlayerData then
+                OnPlayerData("inventory", ESX.PlayerData.inventory, previous)
             end
         end)
 
         ESX.SecureNetEvent("esx:removeInventoryItem", function(item, count, showNotification)
+            local previous = ESX.PlayerData.inventory
+
             for i = 1, #ESX.PlayerData.inventory do
                 if ESX.PlayerData.inventory[i].name == item then
-                    ESX.PlayerData.inventory[i].count = count
+                    if count > 0 then
+                        ESX.PlayerData.inventory[i].count = count
+                    else
+                        table.remove(ESX.PlayerData.inventory, i)
+                    end
+
                     break
                 end
+            end
+
+            if OnPlayerData then
+                OnPlayerData("inventory", ESX.PlayerData.inventory, previous)
             end
         end)
 

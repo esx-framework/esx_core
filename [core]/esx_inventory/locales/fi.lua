@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "Reppu %s / %s",
     ["use"] = "Käytä",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "Et voi kerätä sitä, koska reppusi on täynnä",
     ["threw_pickup_prompt"] = "Paina E kerätäksesi",
     ["keymap_showinventory"] = "Avaa reppu",
+    ["player_inventory"] = "Tavarat",
+    ["storage"] = "Varasto",
+    ["storage_full"] = "Varasto on täynnä",
+    ["weight"] = "Paino",
+    ["take"] = "Ota",
+    ["nearby_players"] = "Lähellä olevat pelaajat",
+    ["added_to_inventory"] = "Lisätty tavaroihin",
+    ["removed_from_inventory"] = "Poistettu tavaroista",
+    ["keymap_hotbar"] = "Käytä pikapaikkaa %s",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

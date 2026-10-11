@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2022-2026 ESX Framework
+ */
+
 import React, { useEffect, useState } from "react";
 import { useNuiEvent } from "@/hooks/useNuiEvent";
 import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";

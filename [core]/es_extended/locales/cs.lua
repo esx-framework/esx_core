@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     -- Inventory
     ["inventory"] = "Inventář ( Váha %s / %s )",
@@ -212,6 +215,8 @@ return {
     ["weapon_compactlauncher"] = "Compact Launcher",
     ["weapon_firework"] = "Firework Launcher",
     ["weapon_grenadelauncher"] = "Grenade Launcher",
+    ["weapon_grenadelauncher_smoke"] = "Tear Gas Launcher",
+    ["weapon_emplauncher"] = "EMP Launcher",
     ["weapon_hominglauncher"] = "Homing Launcher",
     ["weapon_minigun"] = "Minigun",
     ["weapon_railgun"] = "Railgun",

@@ -1,10 +1,13 @@
-fx_version 'bodacious'
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
+fx_version 'cerulean'
 
 game 'gta5'
-author 'ESX-Framework & Brayden'
+author 'ESX-Framework'
 description 'A simplistic context menu for ESX.'
 lua54 'yes'
-version '1.15.2'
+version '1.16.0'
 
 ui_page 'index.html'
 

@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "Inventar ( Težina %s / %s )",
     ["use"] = "Koristi",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "Inventar je pun, ne možete pokupiti to!",
     ["threw_pickup_prompt"] = "Pritisni E da pokupiš",
     ["keymap_showinventory"] = "Otvaranje inventara",
+    ["player_inventory"] = "Inventar",
+    ["storage"] = "Skladište",
+    ["storage_full"] = "Skladište je puno",
+    ["weight"] = "Težina",
+    ["take"] = "Uzmi",
+    ["nearby_players"] = "Igrači u blizini",
+    ["added_to_inventory"] = "Dodato u inventar",
+    ["removed_from_inventory"] = "Uklonjeno iz inventara",
+    ["keymap_hotbar"] = "Koristi brzi slot %s",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

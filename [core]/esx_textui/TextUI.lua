@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 Debug = ESX.GetConfig().EnableDebug
 local isShowing = false
 ---@param message string

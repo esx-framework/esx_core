@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 --[[
     https://github.com/overextended/ox_lib
 
@@ -11,21 +14,83 @@ local registeredCallbackNames = {}
 local compatCallbacks = {}
 local timers = {}
 local cbEvent = '__xLib_cb_%s'
-local callbackTimeout = GetConvarInt('xLib:callbackTimeout', 300000)
+local DEFAULT_AWAIT_TIMEOUT <const> = 300000
 local resource_name = GetCurrentResourceName() --TODO: Add cache
 
+---@return integer|nil
+local function getConfiguredTimeout()
+    local value = tonumber(GetConvar('xLib:callbackTimeout', GetConvar('esx:callbackTimeout', '')))
+
+    if
+        value
+        and value == value
+        and value > -math.huge
+        and value < math.huge
+    then
+        return math.max(math.floor(value), 0)
+    end
+end
+
+local configuredTimeout = getConfiguredTimeout()
+local awaitTimeout = configuredTimeout or DEFAULT_AWAIT_TIMEOUT
+
+local function createCallbackKey(event)
+    local key
+
+    repeat
+        key = ('%s:%s:%s'):format(event, GetGameTimer(), xLib.string.randomHex(32))
+    until not pendingCallbacks[key]
+
+    return key
+end
+
 local function publishValidCallback(name)
-    local ok = pcall(function()
-        xLib.setValidCallback(name, true)
-    end)
+    local registration = registeredCallbackNames[name]
+
+    if not registration then return false end
+
+    local ok, accepted = pcall(xLib.setValidCallback, name, true, registration.owner)
+    registration.active = ok and accepted == true
 
     if not ok then
         SetTimeout(1000, function()
-            if registeredCallbackNames[name] then
+            if registeredCallbackNames[name] == registration then
                 publishValidCallback(name)
             end
         end)
     end
+
+    return registration.active
+end
+
+local function claimCallback(name, cb, owner)
+    owner = owner or resource_name
+    assert(type(name) == 'string' and name ~= '' and #name <= 200, 'invalid callback name')
+    
+    local mt = type(cb) == 'table' and getmetatable(cb)
+    assert(type(cb) == 'function' or (type(mt) == 'table' and type(mt.__call) == 'function'), 'callback must be a function')
+    assert(type(owner) == 'string' and owner ~= '' and #owner <= 100, 'invalid callback owner')
+
+    local previous = registeredCallbackNames[name]
+    if previous and previous.owner ~= owner then
+        error(("callback '%s' is already owned by resource '%s'"):format(name, previous.owner), 3)
+    end
+
+    local ok, accepted = pcall(xLib.setValidCallback, name, true, owner)
+    if not ok or accepted ~= true then
+        error(("unable to claim callback '%s': %s"):format(name, ok and 'name already owned' or tostring(accepted)), 3)
+    end
+
+    if previous then
+        previous.active = false
+        RemoveEventHandler(previous.handler)
+    end
+
+    compatCallbacks[name] = nil
+    local registration = { owner = owner, active = true }
+    registeredCallbackNames[name] = registration
+
+    return registration
 end
 
 local function republishValidCallbacks()
@@ -43,15 +108,16 @@ end)
 -- Compat callbacks (via ESX.Register*) belong to another resource while their
 -- handlers live here, so they must be removed manually when that resource stops.
 AddEventHandler('onClientResourceStop', function(resource)
-    for name, registration in pairs(compatCallbacks) do
-        if registration.owner == resource then
-            RemoveEventHandler(registration.handler)
+    for name, registration in pairs(registeredCallbackNames) do
+        if resource == 'esx_lib' then registration.active = false end
 
+        if registration.owner == resource then
+            registration.active = false
+            RemoveEventHandler(registration.handler)
             compatCallbacks[name] = nil
             registeredCallbackNames[name] = nil
-
             if GetResourceState('esx_lib') == 'started' then
-                xLib.setValidCallback(name, false)
+                xLib.setValidCallback(name, false, registration.owner)
             end
         end
     end
@@ -96,11 +162,7 @@ end
 local function triggerServerCallback(_, event, delay, cb, ...)
     if not eventTimer(event, delay) then return end
 
-    local key
-
-    repeat
-        key = ('%s:%s'):format(event, math.random(0, 100000))
-    until not pendingCallbacks[key]
+    local key = createCallbackKey(event)
 
     ---@type promise | false
     local promise = not cb and promise.new()
@@ -123,12 +185,29 @@ local function triggerServerCallback(_, event, delay, cb, ...)
         end
     end
 
+    local timeout = awaitTimeout
+
+    if timeout and timeout > 0 then
+        SetTimeout(timeout, function()
+            if not pendingCallbacks[key] then
+                return
+            end
+
+            pendingCallbacks[key] = nil
+
+            local err = ("callback event '%s' timed out"):format(key)
+            if promise then
+                promise:reject(err)
+            elseif cb then
+                warn(err)
+            end
+        end)
+    end
+
     TriggerServerEvent('xLib:validateCallback', event, resource_name, key)
     TriggerServerEvent(cbEvent:format(event), resource_name, key, ...)
 
     if promise then
-        SetTimeout(callbackTimeout, function() promise:reject(("callback event '%s' timed out"):format(key)) end)
-
         return table.unpack(Citizen.Await(promise))
     end
 end
@@ -185,10 +264,11 @@ local pcall = pcall
 function xLib.callback.register(name, cb)
     local event = cbEvent:format(name)
 
-    registeredCallbackNames[name] = true
-    publishValidCallback(name)
-
-    RegisterNetEvent(event, function(resource, key, ...)
+    local registration = claimCallback(name, cb)
+    RegisterNetEvent(event)
+    
+    registration.handler = AddEventHandler(event, function(resource, key, ...)
+        if not registration.active then return end
         TriggerServerEvent(cbEvent:format(resource), key, callbackResponse(pcall(cb, ...)))
     end)
 end
@@ -216,27 +296,27 @@ function xLib.callback.registerCompat(name, cb, owner)
             return table.unpack(values)
         end
 
+        if awaitTimeout > 0 then
+            SetTimeout(awaitTimeout, function()
+                if not responded then
+                    responded = true
+                    response:reject(("compat callback '%s' timed out"):format(name))
+                end
+            end)
+        end
+
         cb(reply, ...)
 
         return table.unpack(Citizen.Await(response))
     end
 
-    local previous = compatCallbacks[name]
-    if previous then
-        RemoveEventHandler(previous.handler)
-    end
-
+    local registration = claimCallback(name, cb, owner)
     RegisterNetEvent(event)
-    local handler = AddEventHandler(event, function(resource, key, ...)
+    registration.handler = AddEventHandler(event, function(resource, key, ...)
+        if not registration.active then return end
         TriggerServerEvent(cbEvent:format(resource), key, callbackResponse(pcall(compatCb, ...)))
     end)
-
-    registeredCallbackNames[name] = true
-    compatCallbacks[name] = {
-        owner = owner or resource_name,
-        handler = handler
-    }
-    publishValidCallback(name)
+    compatCallbacks[name] = registration
 end
 
 return xLib.callback

@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "Inventaire ( Poids %s / %s )",
     ["use"] = "Utiliser",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "Votre inventaire est plein, vous ne pouvez donc pas ramasser cela!",
     ["threw_pickup_prompt"] = "Appuyez sur E pour ramasser",
     ["keymap_showinventory"] = "Afficher l'inventaire",
+    ["player_inventory"] = "Inventaire",
+    ["storage"] = "Stockage",
+    ["storage_full"] = "Le stockage est plein",
+    ["weight"] = "Poids",
+    ["take"] = "Prendre",
+    ["nearby_players"] = "Joueurs à proximité",
+    ["added_to_inventory"] = "Ajouté à l’inventaire",
+    ["removed_from_inventory"] = "Retiré de l’inventaire",
+    ["keymap_hotbar"] = "Utiliser l’emplacement rapide %s",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

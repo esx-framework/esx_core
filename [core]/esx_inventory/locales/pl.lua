@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "ekwipunek %s / %s",
     ["use"] = "użyj",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "nie możesz tego podnieść, gdyż masz pełny ekwipunek!",
     ["threw_pickup_prompt"] = "naciśnij E aby podnieść",
     ["keymap_showinventory"] = "pokaż ekwipunek",
+    ["player_inventory"] = "Ekwipunek",
+    ["storage"] = "Magazyn",
+    ["storage_full"] = "Magazyn jest pełny",
+    ["weight"] = "Waga",
+    ["take"] = "Weź",
+    ["nearby_players"] = "Gracze w pobliżu",
+    ["added_to_inventory"] = "Dodano do ekwipunku",
+    ["removed_from_inventory"] = "Usunięto z ekwipunku",
+    ["keymap_hotbar"] = "Użyj slotu szybkiego dostępu %s",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

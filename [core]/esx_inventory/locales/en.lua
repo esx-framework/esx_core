@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "Inventory ( Weight %s / %s )",
     ["use"] = "Use",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "Inventory is full, Cannot Pickup!",
     ["threw_pickup_prompt"] = "Press E to Pickup",
     ["keymap_showinventory"] = "Show Inventory",
+    ["player_inventory"] = "Inventory",
+    ["storage"] = "Storage",
+    ["storage_full"] = "Storage is full",
+    ["weight"] = "Weight",
+    ["take"] = "Take",
+    ["nearby_players"] = "Nearby Players",
+    ["added_to_inventory"] = "Added to inventory",
+    ["removed_from_inventory"] = "Removed from inventory",
+    ["keymap_hotbar"] = "Use hotbar slot %s",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

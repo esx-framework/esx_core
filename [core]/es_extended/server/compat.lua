@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 --All server-side functions outsourced from the Core to the lib will be stored here for compatability, e.g:
 
 ESX.OneSync.GetPlayersInArea = xLib.onesync.getPlayersInArea

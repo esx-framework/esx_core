@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 ---@class onesynclib
 xLib.onesync = {}
 
@@ -39,22 +42,26 @@ local function getNearbyPlayers(source, closest, distance, ignore, routingBucket
         end
     end
 
-    for _, xPlayer in pairs(ESX.Players) do
-        if not ignore[xPlayer.source] and (not routingBucket or GetPlayerRoutingBucket(xPlayer.source) == routingBucket) then
-            local entity = GetPlayerPed(xPlayer.source)
+    local players = GetPlayers()
+
+    for i = 1, #players do
+        local playerId = tonumber(players[i])
+        local entity = playerId and GetPlayerPed(playerId) or 0
+
+        if entity ~= 0 and not ignore[playerId] and (not routingBucket or GetPlayerRoutingBucket(playerId) == routingBucket) then
             local coords = GetEntityCoords(entity)
 
             if not closest then
                 local dist = #(playerCoords - coords)
                 if dist <= distance then
                     count = count + 1
-                    result[count] = { id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
+                    result[count] = { id = playerId, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
                 end
             else
-                if xPlayer.source ~= source then
+                if playerId ~= source then
                     local dist = #(playerCoords - coords)
                     if dist <= (result.dist or distance) then
-                        result = { id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
+                        result = { id = playerId, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
                     end
                 end
             end

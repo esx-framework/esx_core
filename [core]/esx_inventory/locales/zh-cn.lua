@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "物品栏 (负重 %s / %s)",
     ["use"] = "使用",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "物品栏已满, 无法拾取!",
     ["threw_pickup_prompt"] = "键下 [E] 拾取",
     ["keymap_showinventory"] = "显示物品栏",
+    ["player_inventory"] = "物品栏",
+    ["storage"] = "储物箱",
+    ["storage_full"] = "储物箱已满",
+    ["weight"] = "重量",
+    ["take"] = "取出",
+    ["nearby_players"] = "附近玩家",
+    ["added_to_inventory"] = "已添加到物品栏",
+    ["removed_from_inventory"] = "已从物品栏移除",
+    ["keymap_hotbar"] = "使用快捷栏 %s",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

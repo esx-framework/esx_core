@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2022-2026 ESX Framework
+ */
+
 (() => {
     let ESXWrapper = {};
     ESXWrapper.MessageSize = 1024;
@@ -28,7 +33,7 @@
 
             if (i === str.length - 1) data.end = true;
 
-            $.post("http://" + namespace + "/__chunk", JSON.stringify(data));
+            $.post("https://" + namespace + "/__chunk", JSON.stringify(data));
         }
     };
 })();

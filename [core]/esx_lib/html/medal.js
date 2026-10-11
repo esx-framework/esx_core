@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2022-2026 ESX Framework
+ */
+
 window.addEventListener('message', function (event) {
     var data = event.data;
     if (!data || data.action !== 'medalClip') return;

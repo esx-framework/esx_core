@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 xLib.math = {}
 
 local math_max = math.max
@@ -47,11 +50,63 @@ end
 function xLib.math.toNumber(value, min, max, round)
     local num = toNumber(value, "toNumber")
     
-    if round then
+    if round and math.type(num) ~= "integer" then
         num = num >= 0 and math_floor(num + 0.5) or math_ceil(num - 0.5)
     end
     
     return xLib.math.clamp(num, min, max)
+end
+
+--- Safely converts input to number without throwing.
+--- @param value any Input value
+--- @param min number|nil Minimum accepted value
+--- @param max number|nil Maximum accepted value
+--- @param round boolean|nil Round to nearest integer
+--- @return number|nil
+function xLib.math.tryNumber(value, min, max, round)
+    local num = tonumber(value)
+
+    if not num or num ~= num or num == math.huge or num == -math.huge then
+        return
+    end
+
+    if round and math.type(num) ~= "integer" then
+        num = num >= 0 and math_floor(num + 0.5) or math_ceil(num - 0.5)
+    end
+
+    if min and num < min then
+        return
+    end
+
+    if max and num > max then
+        return
+    end
+
+    return num
+end
+
+--- Safely converts input to an integer without throwing.
+--- @param value any Input value
+--- @param min number|nil Minimum accepted value
+--- @param max number|nil Maximum accepted value
+--- @return integer|nil
+function xLib.math.toInteger(value, min, max)
+    local num = xLib.math.tryNumber(value, nil, nil, true)
+    num = num and math.tointeger(num)
+
+    if not num then
+        return
+    end
+
+    if min and num < min then
+        return
+    end
+
+    if max and num > max then
+        return
+    end
+
+    return num
 end
 
 --- Converts input string to multiple numbers.
@@ -253,7 +308,6 @@ end
 ---@param maxRange number
 ---@return number
 function xLib.math.Random(minRange, maxRange)
-    math.randomseed(GetGameTimer())
     return math.random(minRange or 1, maxRange or 10)
 end
 

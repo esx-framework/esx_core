@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+  SPDX-License-Identifier: GPL-3.0-only
+  Copyright (C) 2022-2026 ESX Framework
+-->
+
 <html>
     <head>
         <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
@@ -252,11 +257,11 @@
                     let div = CreateElement("div", "", item);
 
                     let title = CreateElement("b", "", div);
-                    title.innerHTML = ele.title;
+                    title.textContent = ele.title;
 
                     if (ele.description) {
                         let desc = CreateElement("i", "", div);
-                        desc.innerHTML = ele.description || "";
+                        desc.textContent = ele.description || "";
                     }
 
                     if (ele.input) {
@@ -264,7 +269,7 @@
                             for (let j = 0; j < ele.inputValues.length; j++) {
                                 let v = ele.inputValues[j];
                                 let container = CreateElement("label", "container", div);
-                                container.innerHTML = v.text;
+                                container.textContent = v.text;
 
                                 let input = CreateElement("INPUT", "", container);
                                 input.type = "radio";

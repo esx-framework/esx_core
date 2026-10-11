@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 ---@class gamelib
 xLib.game = {}
 
@@ -425,6 +428,16 @@ function xLib.game.setVehicleProperties(vehicle, props)
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
     SetVehicleModKit(vehicle, 0)
+
+    local modLoadDeadline = GetGameTimer() + 5000
+
+    while not IsVehicleModLoadDone(vehicle) and GetGameTimer() < modLoadDeadline do
+        Wait(0)
+
+        if not DoesEntityExist(vehicle) then
+            return
+        end
+    end
 
     if props.tyresCanBurst ~= nil then
         SetVehicleTyresCanBurst(vehicle, props.tyresCanBurst)

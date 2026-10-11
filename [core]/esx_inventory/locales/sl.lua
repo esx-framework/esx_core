@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "Shramba ( Teza %s / %s )",
     ["use"] = "Uporabi",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "Shramba je poln, nemorem pobrati!",
     ["threw_pickup_prompt"] = "Pritisni E da poberes",
     ["keymap_showinventory"] = "Pokazi Shrambo",
+    ["player_inventory"] = "Inventar",
+    ["storage"] = "Skladišče",
+    ["storage_full"] = "Skladišče je polno",
+    ["weight"] = "Teža",
+    ["take"] = "Vzemi",
+    ["nearby_players"] = "Bližnji igralci",
+    ["added_to_inventory"] = "Dodano v inventar",
+    ["removed_from_inventory"] = "Odstranjeno iz inventarja",
+    ["keymap_hotbar"] = "Uporabi hitri slot %s",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

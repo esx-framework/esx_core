@@ -1,3 +1,8 @@
+<!--
+  SPDX-License-Identifier: GPL-3.0-only
+  Copyright (C) 2022-2026 ESX Framework
+-->
+
 <script lang="ts">
   import './styles.css'
   import AssetIcon from './components/AssetIcon.svelte'
@@ -218,6 +223,57 @@
     send('skinMenu:rotate', { direction })
   }
 
+  let dragging = $state(false)
+  let dragPointer: number | null = null
+  let dragLastX = 0
+  let dragPending = 0
+  let dragInFlight = false
+
+  function flushDrag() {
+    if (dragInFlight || dragPending === 0) return
+
+    const delta = dragPending / Math.max(window.innerWidth, 1)
+    dragPending = 0
+    dragInFlight = true
+
+    send('skinMenu:drag', { delta }).finally(() => {
+      dragInFlight = false
+      flushDrag()
+    })
+  }
+
+  function startDrag(event: PointerEvent) {
+    if (event.button !== 0) return
+
+    cameraMenuOpen = false
+    dragging = true
+    dragPointer = event.pointerId
+    dragLastX = event.clientX
+    ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
+  }
+
+  function moveDrag(event: PointerEvent) {
+    if (!dragging || event.pointerId !== dragPointer) return
+
+    dragPending += event.clientX - dragLastX
+    dragLastX = event.clientX
+    flushDrag()
+  }
+
+  function endDrag(event: PointerEvent) {
+    if (event.pointerId !== dragPointer) return
+
+    dragging = false
+    dragPointer = null
+    flushDrag()
+  }
+
+  function resetDrag() {
+    dragging = false
+    dragPointer = null
+    dragPending = 0
+  }
+
   function toggleCameraMenu() {
     cameraMenuOpen = !cameraMenuOpen
   }
@@ -380,6 +436,7 @@
     if (!data || typeof data.action !== 'string') return
 
     if (data.action === 'skinMenu:close') {
+      resetDrag()
       cameraMenuOpen = false
       exportOpen = false
       importOpen = false
@@ -393,6 +450,7 @@
       elements = Array.isArray(data.elements) ? data.elements : []
       activeName = data.active ?? elements[0]?.name ?? ''
       cameraMenuOpen = false
+      if (!visible) resetDrag()
       visible = true
     }
   }
@@ -420,6 +478,17 @@
 </script>
 
 {#if visible}
+  <div
+    class="rotate-layer"
+    class:dragging
+    role="presentation"
+    onpointerdown={startDrag}
+    onpointermove={moveDrag}
+    onpointerup={endDrag}
+    onpointercancel={endDrag}
+    onlostpointercapture={endDrag}
+  ></div>
+
   <main class="skin-shell" aria-label={title}>
     <CategoryRail
       categories={visibleCategories}

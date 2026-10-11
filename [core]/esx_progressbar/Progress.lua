@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 ---@class ProgressBarAnimation
 ---@field public type "anim" | "Scenario"
 ---@field public dict? string
@@ -50,7 +53,7 @@ local function Progressbar(message, length, Options)
     if CurrentProgress.FreezePlayer then
         FreezeEntityPosition(ESX.PlayerData.ped, CurrentProgress.FreezePlayer)
     end
-    SendNUIMessage({
+    xLib.nui.send({
         type = "Progressbar",
         length = length or 3000,
         message = message or "ESX-Framework",
@@ -71,7 +74,7 @@ local function CancelProgressbar()
     if not CurrentProgress then
         return
     end
-    SendNUIMessage({
+    xLib.nui.send({
         type = "Close",
     })
     ClearPedTasks(ESX.PlayerData.ped)

@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "מלאי ( משקל %s / %s )",
     ["use"] = "השתמש",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "המלאי מלא, לא ניתן לאסוף!",
     ["threw_pickup_prompt"] = "לחץ E כדי לאסוף",
     ["keymap_showinventory"] = "הצג מלאי",
+    ["player_inventory"] = "מלאי",
+    ["storage"] = "אחסון",
+    ["storage_full"] = "האחסון מלא",
+    ["weight"] = "משקל",
+    ["take"] = "קח",
+    ["nearby_players"] = "שחקנים קרובים",
+    ["added_to_inventory"] = "נוסף למלאי",
+    ["removed_from_inventory"] = "הוסר מהמלאי",
+    ["keymap_hotbar"] = "שימוש בחריץ מהיר %s",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

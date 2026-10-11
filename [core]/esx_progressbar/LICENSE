@@ -1,3 +1,5 @@
+Copyright (C) 2022-2026 ESX Framework
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

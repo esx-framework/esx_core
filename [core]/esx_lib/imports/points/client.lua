@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 ---@class pointslib
 xLib.points = {}
 
@@ -27,6 +30,8 @@ function xLib.points.create(coords, distance, hidden, enter, leave, inside)
         resource = GetInvokingResource()
     }
 
+    xLib.points.startLoop()
+
     return handle
 end
 
@@ -54,7 +59,7 @@ function xLib.points.startLoop()
     CreateThread(function()
         local lastScan = 0
 
-        while true do
+        while next(points) do
             local coords = GetEntityCoords(PlayerPedId())
 
             for handle, point in pairs(insidePoints) do
@@ -95,6 +100,8 @@ function xLib.points.startLoop()
 
             Wait(next(insidePoints) and 0 or 500)
         end
+
+        loopStarted = false
     end)
 end
 

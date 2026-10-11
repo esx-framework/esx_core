@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 ---@class TokenOptions
 ---@field source? string|number Player source that is allowed to consume the token.
 ---@field ttl number Time to live in milliseconds.

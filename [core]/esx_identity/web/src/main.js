@@ -1,5 +1,10 @@
-import { createApp } from 'vue'
-import './style.css'
-import App from './App.vue'
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2022-2026 ESX Framework
+ */
 
-createApp(App).mount('#app')
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+
+createApp(App).mount("#app");

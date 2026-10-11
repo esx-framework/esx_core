@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2022-2026 ESX Framework
+ */
+
 import { useReducer, useState, useRef, useEffect } from "react";
 import { fetchNui } from "@/utils/fetchNui";
 import { useControls } from "@/hooks/useControls";

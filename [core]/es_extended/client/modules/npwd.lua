@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 local npwd = GetResourceState("npwd"):find("start") and exports.npwd or nil
 
 local function checkPhone()

@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 Locales["en"] = {
     ["male"] = "Male",
     ["female"] = "Female",
@@ -18,5 +21,7 @@ Locales["en"] = {
         ["title"] = "CHARACTER SELECTION",
         ["char_info_title"] = "Character Info",
         ["play"] = "PLAY",
+        ["action_failed"] = "The action could not be completed. Please try again.",
+        ["action_pending"] = "Please wait...",
     }
 }

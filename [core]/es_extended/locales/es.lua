@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     -- Inventory
     ["inventory"] = "Inventario (Peso %s / %s)",
@@ -116,6 +119,7 @@ return {
     ["commanderror_invalidplayerid"] = "El jugador especificado no está en línea",
     ["commandgeneric_playerid"] = "ID del servidor del jugador",
     ["commandgeneric_dimension"] = "Dimensión de destino",
+    ["command_giveammo"] = "Dar munición a un jugador",
     ["command_giveammo_noweapon_found"] = "%s no tiene esa arma",
     ["command_giveammo_weapon"] = "Nombre del arma",
     ["command_giveammo_ammo"] = "Cantidad de munición",
@@ -226,6 +230,8 @@ return {
     ["weapon_compactlauncher"] = "Lanzagranadas compacto",
     ["weapon_firework"] = "Lanzador de pirotecnia",
     ["weapon_grenadelauncher"] = "Lanzagranadas",
+    ["weapon_grenadelauncher_smoke"] = "Lanzagranadas de gas lacrimógeno",
+    ["weapon_emplauncher"] = "Lanzador EMP",
     ["weapon_hominglauncher"] = "Lanzacohetes teledirigido",
     ["weapon_minigun"] = "Minigun",
     ["weapon_railgun"] = "Cañón de riel",

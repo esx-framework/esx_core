@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 xLib.getMedalConfig = function()
     return Config.Medal
 end
@@ -5,7 +8,7 @@ end
 xLib.triggerMedalClip = function(publicKey, eventName, clipOptions)
     if not publicKey or publicKey == '' then return end
 
-    SendNUIMessage({
+    local message = {
         action = 'medalClip',
         publicKey = publicKey,
         payload = {
@@ -18,5 +21,7 @@ xLib.triggerMedalClip = function(publicKey, eventName, clipOptions)
                 alertType = 'Default'
             }
         }
-    })
+    }
+
+    xLib.nui.send(message)
 end

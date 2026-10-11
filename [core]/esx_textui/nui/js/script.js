@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2022-2026 ESX Framework
+ */
+
 const w = window;
 const doc = document;
 let lastType = {};
@@ -69,7 +74,20 @@ const replaceColors = (str, obj) => {
     return strToReplace;
 };
 
+const escapeHtml = (str) => {
+    const map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+    };
+    return str.replace(/[&<>"']/g, (m) => map[m]);
+};
+
 notification = (data) => {
+    data["message"] = escapeHtml(data["message"]);
+
     for (color in codes) {
         if (data["message"].includes(color)) {
             let objArr = {};

@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 
 local NOTIFY_TYPES = {
     INFO = "^5[%s]^7-^6[INFO]^7 %s",

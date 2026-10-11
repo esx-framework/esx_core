@@ -1,6 +1,11 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 if Config.CustomInventory ~= "ox" then return end
 
 MySQL.ready(function()
+    ESXCatalog.awaitReady()
+
     TriggerEvent("__cfx_export_ox_inventory_Items", function(ref)
         if ref then
             ESX.Items = ref()

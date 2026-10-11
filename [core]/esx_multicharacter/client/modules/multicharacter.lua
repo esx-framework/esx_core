@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 ---@diagnostic disable: duplicate-set-field
 Multicharacter = {}
 Multicharacter._index = Multicharacter
@@ -137,13 +140,13 @@ function Multicharacter:PrepForUI()
 end
 
 function Multicharacter:CloseUI()
-    SendNUIMessage({
+    xLib.nui.send({
         action = "ToggleMulticharacter",
         data = {
             show = false
         }
     })
-    SetNuiFocus(false, false)
+    xLib.nui.focus(false, false)
 end
 
 function Multicharacter:SetupCharacter(index)

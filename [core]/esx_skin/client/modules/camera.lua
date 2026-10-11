@@ -1,25 +1,8 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 Camera = {}
 Camera._index = Camera
-
-function Camera:AngleLoop()
-    CreateThread(function()
-        while self.cam do
-            if IsDisabledControlPressed(0, 44) then
-                Skin.heading = Skin.heading - 1
-            elseif IsDisabledControlPressed(0, 38) then
-                Skin.heading = Skin.heading + 1
-            end
-
-            if Skin.heading > 360 then
-                Skin.heading = Skin.heading - 360
-            elseif Skin.heading < 0 then
-                Skin.heading = Skin.heading + 360
-            end
-
-            Wait(0)
-        end
-    end)
-end
 
 function Camera:Reset()
     Skin.heading = 90.0
@@ -50,8 +33,7 @@ function Camera:PositionLoop()
 end
 
 function Camera:StartLoops()
-    ESX.TextUI(Translate('use_rotate_view', "Q", "E"))
-    self:AngleLoop()
+    ESX.TextUI(Translate("drag_rotate_view"))
     self:PositionLoop()
 end
 

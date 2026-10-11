@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 ---Yields the current thread until the callback returns a non-nil value.
 ---@generic T
 ---@param cb fun(): T?

@@ -1,7 +1,16 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 local loadingScreenFinished = false
 local ready = false
 local guiEnabled = false
+local registrationPending = false
 local timecycleModifier = "hud_def_blur"
+local themeDefaults = {
+    secondaryColor = "#1b1c1a",
+    backgroundColor = "#171918",
+    accentColor = "#34342e",
+}
 
 ESX.SecureNetEvent("esx_identity:alreadyRegistered", function()
     while not loadingScreenFinished do
@@ -25,13 +34,13 @@ AddEventHandler("esx:loadingScreenOff", function()
     loadingScreenFinished = true
 end)
 
-RegisterNUICallback("ready", function(_, cb)
+xLib.nui.register("ready", function()
     ready = true
-    cb(1)
+    return 1
 end)
 
 function setGuiState(state)
-        SetNuiFocus(state, state)
+        xLib.nui.focus(state, state)
         guiEnabled = state
 
         if state then
@@ -40,7 +49,19 @@ function setGuiState(state)
             ClearTimecycleModifier()
         end
 
-        SendNUIMessage({ type = "enableui", enable = state })
+        xLib.nui.send({
+            type = "enableui",
+            enable = state,
+            theme = xLib.colors.getESXTheme(themeDefaults),
+            settings = {
+                maxNameLength = Config.MaxNameLength,
+                minHeight = Config.MinHeight,
+                maxHeight = Config.MaxHeight,
+maxAge = Config.MaxAge,
+                locale = Config.Locale,
+                dateFormat = Config.DateFormat
+            }
+        })
 end
 
 RegisterNetEvent("esx_identity:showRegisterIdentity", function()
@@ -54,22 +75,31 @@ RegisterNetEvent("esx_identity:showRegisterIdentity", function()
         end
 end)
 
-RegisterNUICallback("register", function(data, cb)
+xLib.nui.register("register", function(data, reply)
         if not guiEnabled then
-            return
+            return xLib.nui.fail("registrationClosed")
         end
 
-        xLib.callback("esx_identity:registerIdentity", false, function(callback)
-            if not callback then
+        if registrationPending then
+            return xLib.nui.fail("registrationPending")
+        end
+        registrationPending = true
+
+        CreateThread(function()
+            local ok, callback = pcall(xLib.callback.await, "esx_identity:registerIdentity", false, data)
+            registrationPending = false
+            if not ok or not callback then
+                reply(xLib.nui.fail("registerFailed"))
                 return
             end
 
+            reply(xLib.nui.ok())
             ESX.ShowNotification(TranslateCap("thank_you_for_registering"))
             setGuiState(false)
 
             if not ESX.GetConfig().Multichar then
                 TriggerEvent("esx_skin:playerRegistered")
             end
-        end, data)
-        cb(1)
+        end)
+        return xLib.nui.defer
 end)

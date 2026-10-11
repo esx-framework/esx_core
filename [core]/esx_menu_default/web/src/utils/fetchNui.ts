@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2022-2026 ESX Framework
+ */
+
 // yoinked from https://github.com/overextended/ox_lib/blob/master/web/src/utils/fetchNui.ts
 /**
  * Simple wrapper around fetch API tailored for CEF/NUI use. This abstraction

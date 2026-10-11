@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 -- Per-VM wrapper exposing xLib.pubsub.* on the server; forwards to the shared
 -- registry (resource/pubsub/server.lua) through its exports.
 

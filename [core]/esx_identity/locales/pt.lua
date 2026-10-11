@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["show_active_character"] = "Mostrar personagem ativa",
     ["active_character"] = "Personagem ativa: %s",

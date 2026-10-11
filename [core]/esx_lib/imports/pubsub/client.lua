@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 -- Per-VM client listener for xLib pub/sub. Routes incoming topic data to the
 -- handlers registered with xLib.pubsub.on. on() only listens; the player must be
 -- subscribed server-side to actually receive anything.

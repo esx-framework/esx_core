@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2022-2026 ESX Framework
+ */
+
 (function(){const s=document.createElement("link").relList;if(s&&s.supports&&s.supports("modulepreload"))return;for(const f of document.querySelectorAll('link[rel="modulepreload"]'))i(f);new MutationObserver(f=>{for(const u of f)if(u.type==="childList")for(const m of u.addedNodes)m.tagName==="LINK"&&m.rel==="modulepreload"&&i(m)}).observe(document,{childList:!0,subtree:!0});function n(f){const u={};return f.integrity&&(u.integrity=f.integrity),f.referrerPolicy&&(u.referrerPolicy=f.referrerPolicy),f.crossOrigin==="use-credentials"?u.credentials="include":f.crossOrigin==="anonymous"?u.credentials="omit":u.credentials="same-origin",u}function i(f){if(f.ep)return;f.ep=!0;const u=n(f);fetch(f.href,u)}})();function xf(e){return e&&e.__esModule&&Object.prototype.hasOwnProperty.call(e,"default")?e.default:e}var yc={exports:{}},w6={};/**
  * @license React
  * react-jsx-runtime.production.js

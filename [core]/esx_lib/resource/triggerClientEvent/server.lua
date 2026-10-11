@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 -- Triggers an event for one or more clients. For an array of players the payload
 -- is packed once instead of being re-serialised per client.
 

@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 Config = {}
 
 Config.Locale = GetConvar("esx:locale", "en")
@@ -504,7 +507,7 @@ Config.Components = {
         label = TranslateCap("glasses_1"),
         name = "glasses_1",
         value = 0,
-        min = 0,
+        min = -1,
         zoomOffset = 0.6,
         camOffset = 0.65,
         componentId = 1,

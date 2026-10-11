@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "Envanter ( Ağırlık %s / %s )",
     ["use"] = "Kullan",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "Envanter Dolu, Alınamaz!",
     ["threw_pickup_prompt"] = "Almak İçin E'ye Basın",
     ["keymap_showinventory"] = "Envanteri Göster",
+    ["player_inventory"] = "Envanter",
+    ["storage"] = "Depo",
+    ["storage_full"] = "Depo dolu",
+    ["weight"] = "Ağırlık",
+    ["take"] = "Al",
+    ["nearby_players"] = "Yakındaki oyuncular",
+    ["added_to_inventory"] = "Envantere eklendi",
+    ["removed_from_inventory"] = "Envanterden çıkarıldı",
+    ["keymap_hotbar"] = "Hızlı slot %s kullan",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

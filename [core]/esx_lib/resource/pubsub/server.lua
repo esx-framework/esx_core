@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 -- xLib pub/sub: a producer subscribes players to a topic server-side and
 -- publishes data pushed only to them. Clients only listen, never subscribe.
 -- The registry is shared here (esx_lib server VM). Namespace topics by resource

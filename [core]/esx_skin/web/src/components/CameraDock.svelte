@@ -1,3 +1,8 @@
+<!--
+  SPDX-License-Identifier: GPL-3.0-only
+  Copyright (C) 2022-2026 ESX Framework
+-->
+
 <script lang="ts">
   import AssetIcon from './AssetIcon.svelte'
   import type { CameraAction, CameraPreset } from '../types'

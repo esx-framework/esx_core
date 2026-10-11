@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 Config = {}
 
 local txAdminLocale = GetConvar("txAdmin-locale", "en")
@@ -16,6 +19,7 @@ Config.Accounts = {
     bank = {
         label = TranslateCap("account_bank"),
         round = true,
+        transferable = false,
     },
     black_money = {
         label = TranslateCap("account_black_money"),
@@ -98,6 +102,9 @@ Config.LogPaycheck = false -- Logs paychecks to a nominated Discord channel via 
 Config.EnableSocietyPayouts = false -- pay from the society account that the player is employed at? Requirement: esx_society
 Config.MaxWeight = 24 -- the max inventory weight without a backpack
 Config.PaycheckInterval = 7 * 60000 -- how often to receive paychecks in milliseconds
+Config.PaycheckBatchSize = 100 -- how many players to pay before yielding the server thread
+Config.PaycheckBatchDelay = 250 -- milliseconds to wait between paycheck batches
+Config.PaycheckJitter = 30 * 1000 -- random delay added to each paycheck run to avoid synchronized bursts
 Config.SaveDeathStatus = true -- Save the death status of a player
 Config.EnableDebug = false -- Use Debug options?
 

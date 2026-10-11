@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 ---@alias CustomType 'number' | 'boolean' | 'function' | 'table' | 'string' | 'nil' | 'array' | 'int' | 'uint' | 'float' |  'char' | 'vector3' | 'vector4' | 'ped' | 'playerId' | 'vehicle' | 'prop' | 'class' | 'model'
 
 ---Checks if value is an array
@@ -56,15 +59,19 @@ local function isCallable(value)
     return false
 end
 
-xLib.callback.register('xLib:validateModel', function(model)
-    return IsModelValid(model)
-end)
-
 local function validateModel(model)
-    local players = GetPlayers()
-    local source = tonumber(players[math.random(1,#players)])
+    if not IsDuplicityVersion() then
+        return IsModelValid(model)
+    end
 
-    return xLib.callback.await('xLib:validateModel', source, false, model)
+    local players = GetPlayers()
+    if #players == 0 then
+        return false
+    end
+
+    local source = tonumber(players[math.random(1, #players)])
+
+    return xLib.callback.await('xLib:validateModel', source, model)
 end
 
 ---Make sure value is a valid type

@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 return {
     ["inventory"] = "Αποθήκη ( Βάρος %s / %s )",
     ["use"] = "Χρήση",
@@ -36,6 +39,15 @@ return {
     ["threw_cannot_pickup"] = "Η αποθήκη είναι γεμάτη, δεν μπορείτε να σηκώσετε!",
     ["threw_pickup_prompt"] = "Πατήστε E για να σηκώσετε",
     ["keymap_showinventory"] = "Εμφάνιση Αποθήκης",
+    ["player_inventory"] = "Αντικείμενα",
+    ["storage"] = "Αποθήκη",
+    ["storage_full"] = "Η αποθήκη είναι γεμάτη",
+    ["weight"] = "Βάρος",
+    ["take"] = "Πάρε",
+    ["nearby_players"] = "Κοντινοί παίκτες",
+    ["added_to_inventory"] = "Προστέθηκε στα αντικείμενα",
+    ["removed_from_inventory"] = "Αφαιρέθηκε από τα αντικείμενα",
+    ["keymap_hotbar"] = "Χρήση γρήγορης θέσης %s",
     ["locale_currency"] = "$%s",
     ["ammo_rounds"] = "Rounds"
 }

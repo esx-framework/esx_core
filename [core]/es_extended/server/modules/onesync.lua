@@ -1,15 +1,25 @@
+-- SPDX-License-Identifier: GPL-3.0-only
+-- Copyright (C) 2022-2026 ESX Framework
+
 ESX.OneSync = {}
 
 ---@param vehicleModel number|string
 ---@param coords vector3|table
 ---@param heading number
 ---@param vehicleProperties table
----@param cb? fun(netId: number)
+---@param cb? fun(netId: number|false)
 ---@param vehicleType string?
 ---@return number? netId
 function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperties, cb, vehicleType)
     if cb and not ESX.IsFunctionReference(cb) then
-        error("Invalid callback function")
+        if vehicleType == nil and type(cb) == "string" then
+            vehicleType = cb
+            cb = nil
+        elseif cb == false then
+            cb = nil
+        else
+            cb = nil
+        end
     end
 
     vehicleModel = joaat(vehicleModel)
@@ -28,21 +38,23 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
 
     local function reject(err)
         if promise then
-            promise:reject(err)
+            return promise:reject(err)
         end
+
+        if cb then
+            return cb(false)
+        end
+
         error(err)
     end
 
     CreateThread(function()
         if not vehicleType then
-            local playerId = next(ESX.Players)
-            if playerId then
-                vehicleType = ESX.GetVehicleType(vehicleModel, playerId)
-            end
+            vehicleType = ESX.GetVehicleType(vehicleModel, next(ESX.Players))
         end
 
         if not vehicleType then
-            return reject("No players online to check vehicle type! Alternatively, you can specify the vehicle type manually.")
+            return reject(("Could not resolve the type of vehicle ^5%s^7! The model is unknown and no player is online to check it, you can also specify the vehicle type manually."):format(vehicleModel))
         end
 
         local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
@@ -78,7 +90,7 @@ end
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
----@param cb? fun(netId: number)
+---@param cb? fun(netId: number|false)
 ---@return number? netId
 function ESX.OneSync.SpawnObject(model, coords, heading, cb)
     if type(model) == "string" then
@@ -98,8 +110,13 @@ function ESX.OneSync.SpawnObject(model, coords, heading, cb)
 
     local function reject(err)
         if promise then
-            promise:reject(err)
+            return promise:reject(err)
         end
+
+        if cb then
+            return cb(false)
+        end
+
         error(err)
     end
 
@@ -131,7 +148,7 @@ end
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
----@param cb? fun(netId: number)
+---@param cb? fun(netId: number|false)
 ---@return number? netId
 function ESX.OneSync.SpawnPed(model, coords, heading, cb)
     if type(model) == "string" then
@@ -150,8 +167,13 @@ function ESX.OneSync.SpawnPed(model, coords, heading, cb)
 
     local function reject(err)
         if promise then
-            promise:reject(err)
+            return promise:reject(err)
         end
+
+        if cb then
+            return cb(false)
+        end
+
         error(err)
     end
 
@@ -181,7 +203,7 @@ end
 ---@param model number|string
 ---@param vehicle number entityId
 ---@param seat number
----@param cb? fun(netId: number)
+---@param cb? fun(netId: number|false)
 ---@return number? netId
 function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
     if type(model) == "string" then
@@ -200,8 +222,13 @@ function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
 
     local function reject(err)
         if promise then
-            promise:reject(err)
+            return promise:reject(err)
         end
+
+        if cb then
+            return cb(false)
+        end
+
         error(err)
     end
 
@@ -215,7 +242,7 @@ function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
             tries = tries + 1
 
             if tries > 40 then
-                reject(("Could not spawn ped - ^5%s^7!"):format(model))
+                return reject(("Could not spawn ped - ^5%s^7!"):format(model))
             end
         end
 
