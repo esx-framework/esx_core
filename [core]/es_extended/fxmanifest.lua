@@ -29,6 +29,7 @@ server_scripts {
 	'server/functions.lua',
 	'server/modules/onesync.lua',
 	'server/modules/paycheck.lua',
+	'server/modules/cooldown.lua',
 
 	'server/main.lua',
 	'server/modules/commands.lua',
