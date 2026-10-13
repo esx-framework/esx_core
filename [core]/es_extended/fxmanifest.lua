@@ -32,6 +32,7 @@ server_scripts {
 	'server/functions.lua',
 	'server/common.lua',
 	'server/modules/callback.lua',
+	'server/modules/cooldown.lua',
 	'server/classes/player.lua',
 	'server/classes/vehicle.lua',
 	'server/classes/overrides/*.lua',
