@@ -1,7 +1,7 @@
 local pickups = {}
 
 RegisterNetEvent("esx:requestModel", function(model)
-    ESX.Streaming.RequestModel(model)
+    xLib.streaming.requestModel(model)
 end)
 
 RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
@@ -35,14 +35,14 @@ RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
 
     if not Config.Multichar then
         Core.FreezePlayer(false)
+        if IsScreenFadedOut() then
+            DoScreenFadeIn(500)
+        end
     end
 
-    if IsScreenFadedOut() then
-        DoScreenFadeIn(500)
-    end
 
     Actions:Init()
-    StartPointsLoop()
+    xLib.points.startLoop()
     StartServerSyncLoops()
     NetworkSetLocalPlayerSyncLookAt(true)
 end)
@@ -153,7 +153,7 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
         return
     end
 
-    ESX.Game.SetVehicleProperties(vehicle, value)
+    xLib.game.setVehicleProperties(vehicle, value)
 end)
 
 ESX.SecureNetEvent("esx:setAccountMoney", function(account)
@@ -246,6 +246,10 @@ ESX.SecureNetEvent("esx:setJob", function(Job)
     ESX.SetPlayerData("job", Job)
 end)
 
+ESX.SecureNetEvent("esx:jobDataRefreshed", function(Job)
+    ESX.SetPlayerData("job", Job)
+end)
+
 ESX.SecureNetEvent("esx:setGroup", function(group)
     ESX.SetPlayerData("group", group)
 end)
@@ -268,7 +272,7 @@ if not Config.CustomInventory then
 
         if itemType == "item_weapon" then
             local weaponHash = joaat(name)
-            ESX.Streaming.RequestWeaponAsset(weaponHash)
+            xLib.streaming.requestWeaponAsset(weaponHash)
             local pickupObject = CreateWeaponObject(weaponHash, 50, coords.x, coords.y, coords.z, true, 1.0, 0)
             SetWeaponObjectTintIndex(pickupObject, tintIndex)
 
@@ -281,7 +285,7 @@ if not Config.CustomInventory then
 
             setObjectProperties(pickupObject)
         else
-            ESX.Game.SpawnLocalObject("prop_money_bag_01", coords, setObjectProperties)
+            xLib.game.spawnLocalObject("prop_money_bag_01", coords, setObjectProperties)
         end
     end)
 
@@ -303,7 +307,7 @@ end)
 if not Config.CustomInventory then
     ESX.SecureNetEvent("esx:removePickup", function(pickupId)
         if pickups[pickupId] and pickups[pickupId].obj then
-            ESX.Game.DeleteObject(pickups[pickupId].obj)
+            xLib.game.deleteObject(pickups[pickupId].obj)
             pickups[pickupId] = nil
         end
     end)
@@ -372,7 +376,6 @@ if not Config.CustomInventory then
         while true do
             local Sleep = 1500
             local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
-            local _, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
             for pickupId, pickup in pairs(pickups) do
                 local distance = #(playerCoords - pickup.coords)
@@ -383,11 +386,13 @@ if not Config.CustomInventory then
 
                     if distance < 1 then
                         if IsControlJustReleased(0, 38) then
+                            local _, closestDistance = xLib.game.getClosestPlayer(playerCoords)
+
                             if IsPedOnFoot(ESX.PlayerData.ped) and (closestDistance == -1 or closestDistance > 3) and not pickup.inRange then
                                 pickup.inRange = true
 
                                 local dict, anim = "weapons@first_person@aim_rng@generic@projectile@sticky_bomb@", "plant_floor"
-                                ESX.Streaming.RequestAnimDict(dict)
+                                xLib.streaming.requestAnimDict(dict)
                                 TaskPlayAnim(ESX.PlayerData.ped, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
                                 RemoveAnimDict(dict)
                                 Wait(1000)
@@ -421,7 +426,7 @@ RegisterNetEvent("esx:tpm", function()
     local GetBlipInfoIdCoord = GetBlipInfoIdCoord
     local GetVehiclePedIsIn = GetVehiclePedIsIn
 
-    ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+    xLib.callback("esx:isUserAdmin", false, function(admin)
         if not admin then
             return
         end
@@ -628,7 +633,7 @@ local function noclipThread()
 end
 
 RegisterNetEvent("esx:noclip", function()
-    ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+    xLib.callback("esx:isUserAdmin", false, function(admin)
         if not admin then
             return
         end
@@ -680,7 +685,7 @@ RegisterNetEvent("esx:freezePlayer", function(input)
     end
 end)
 
-ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
+xLib.callback.registerCompat("esx:GetVehicleType", function(cb, model)
     cb(ESX.GetVehicleTypeClient(model))
 end)
 

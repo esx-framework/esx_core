@@ -91,7 +91,12 @@ RegisterNUICallback("menu_change", function(data, cb)
     cb("OK")
 end)
 
-ESX.RegisterInput("menu_default_enter", "Submit menu item", "KEYBOARD", "RETURN", function()
+xLib.addKeybind({
+    name = "menu_default_enter",
+    description = "Submit menu item",
+    defaultMapper = "KEYBOARD",
+    defaultKey = "RETURN",
+    onPressed = function()
     if OpenedMenus > 0 and (GetGameTimer() - GUI.Time) > 200 then
         SendNUIMessage({
             action = "controlPressed",
@@ -99,9 +104,15 @@ ESX.RegisterInput("menu_default_enter", "Submit menu item", "KEYBOARD", "RETURN"
         })
         GUI.Time = GetGameTimer()
     end
-end)
+end,
+})
 
-ESX.RegisterInput("menu_default_backspace", "Close menu", "KEYBOARD", "BACK", function()
+xLib.addKeybind({
+    name = "menu_default_backspace",
+    description = "Close menu",
+    defaultMapper = "KEYBOARD",
+    defaultKey = "BACK",
+    onPressed = function()
     if OpenedMenus > 0 then
         SendNUIMessage({
             action = "controlPressed",
@@ -109,9 +120,15 @@ ESX.RegisterInput("menu_default_backspace", "Close menu", "KEYBOARD", "BACK", fu
         })
         GUI.Time = GetGameTimer()
     end
-end)
+end,
+})
 
-ESX.RegisterInput("menu_default_top", "Change menu focus to top item", "KEYBOARD", "UP", function()
+xLib.addKeybind({
+    name = "menu_default_top",
+    description = "Change menu focus to top item",
+    defaultMapper = "KEYBOARD",
+    defaultKey = "UP",
+    onPressed = function()
     if OpenedMenus > 0 then
         SendNUIMessage({
             action = "controlPressed",
@@ -119,9 +136,15 @@ ESX.RegisterInput("menu_default_top", "Change menu focus to top item", "KEYBOARD
         })
         GUI.Time = GetGameTimer()
     end
-end)
+end,
+})
 
-ESX.RegisterInput("menu_default_down", "Change menu focus to down item", "KEYBOARD", "DOWN", function()
+xLib.addKeybind({
+    name = "menu_default_down",
+    description = "Change menu focus to down item",
+    defaultMapper = "KEYBOARD",
+    defaultKey = "DOWN",
+    onPressed = function()
     if OpenedMenus > 0 then
         SendNUIMessage({
             action = "controlPressed",
@@ -129,9 +152,15 @@ ESX.RegisterInput("menu_default_down", "Change menu focus to down item", "KEYBOA
         })
         GUI.Time = GetGameTimer()
     end
-end)
+end,
+})
 
-ESX.RegisterInput("menu_default_left", "Change menu slider to left", "KEYBOARD", "LEFT", function()
+xLib.addKeybind({
+    name = "menu_default_left",
+    description = "Change menu slider to left",
+    defaultMapper = "KEYBOARD",
+    defaultKey = "LEFT",
+    onPressed = function()
     if OpenedMenus > 0 then
         SendNUIMessage({
             action = "controlPressed",
@@ -139,9 +168,15 @@ ESX.RegisterInput("menu_default_left", "Change menu slider to left", "KEYBOARD",
         })
         GUI.Time = GetGameTimer()
     end
-end)
+end,
+})
 
-ESX.RegisterInput("menu_default_right", "Change menu slider to right", "KEYBOARD", "RIGHT", function()
+xLib.addKeybind({
+    name = "menu_default_right",
+    description = "Change menu slider to right",
+    defaultMapper = "KEYBOARD",
+    defaultKey = "RIGHT",
+    onPressed = function()
     if OpenedMenus > 0 then
         SendNUIMessage({
             action = "controlPressed",
@@ -149,4 +184,5 @@ ESX.RegisterInput("menu_default_right", "Change menu slider to right", "KEYBOARD
         })
         GUI.Time = GetGameTimer()
     end
-end)
+end,
+})

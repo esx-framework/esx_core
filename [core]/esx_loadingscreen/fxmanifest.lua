@@ -1,17 +1,21 @@
-game 'common'
+fx_version "cerulean"
+game "gta5"
+lua54 "yes"
 
 fx_version 'cerulean'
 author 'ESX-Framework'
 description 'Allows resources to Run tasks at specific intervals.'
-version '1.13.4'
+version '1.15.2'
 lua54 'yes'
 
-loadscreen 'index.html'
-
-shared_script 'config.lua'
-
+loadscreen "web/index.html"
 loadscreen_manual_shutdown "yes"
 
-client_script 'client/client.lua'
+client_script "client/main.lua"
 
-files { 'index.html', './vid/*.mp4', './vid/*.webm', './js/index.js', './css/index.css' }
+files {
+    "web/index.html",
+    "web/style.css",
+    "web/script.js",
+    "web/logo.png"
+}

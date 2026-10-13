@@ -31,11 +31,8 @@ AddEventHandler("playerDropped", function()
 end)
 
 RegisterNetEvent("esx_multicharacter:DeleteCharacter", function(charid)
-    if not Config.CanDelete or type(charid) ~= "number" or string.len(charid) > 2 then
-        return
-    end
     local source = source
-    Database:DeleteCharacter(source, charid)
+    Multicharacter:DeleteCharacter(source, charid)
 end)
 
 RegisterNetEvent("esx_multicharacter:relog", function()

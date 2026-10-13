@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <h1 align='center'>[ESX] Menu Default</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/en/esx_core/esx_menu_default'>Documentation</a></b></h5>
+=======
+<h1 align='center'>[ESX] Menu Default</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
+>>>>>>> fe59ca0bd6da59e2ec6eb4a8d06ece312e96ae7a
 
 A default List type menu for ESX.
 

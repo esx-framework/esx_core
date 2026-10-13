@@ -12,7 +12,9 @@ CreateThread(function()
             data = data,
         })
         SetTimeout(200, function()
-            SetNuiFocus(true, true)
+            if next(OpenedMenus) then
+                SetNuiFocus(true, true)
+            end
         end)
     end
 

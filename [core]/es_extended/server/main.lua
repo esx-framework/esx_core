@@ -2,8 +2,26 @@ SetMapName("San Andreas")
 SetGameType("ESX Legacy")
 
 local oneSyncState = GetConvar("onesync", "off")
+local isEnhanced = xLib.isEnhanced()
 local newPlayer = "INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `ssn` = ?, `group` = ?"
 local loadPlayer = "SELECT `accounts`, `ssn`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`"
+
+local function decodeJsonObject(value, fallback)
+    if type(value) == "table" then
+        return value
+    end
+
+    if type(value) ~= "string" or value == "" then
+        return fallback
+    end
+
+    local ok, decoded = pcall(json.decode, value)
+    if not ok or type(decoded) ~= "table" then
+        return fallback
+    end
+
+    return decoded
+end
 
 if Config.Multichar then
     newPlayer = newPlayer .. ", `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?"
@@ -151,7 +169,7 @@ if not Config.Multichar then
             return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
         end
 
-        if oneSyncState == "off" or oneSyncState == "legacy" then
+        if not isEnhanced and (oneSyncState == "off" or oneSyncState == "legacy") then
             return deferrals.done(("[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s"):format(oneSyncState))
         end
 
@@ -246,8 +264,8 @@ function loadESXPlayer(identifier, playerId, isNew)
         grade_label = gradeObject.label,
         grade_salary = gradeObject.salary,
 
-        skin_male = gradeObject.skin_male and json.decode(gradeObject.skin_male) or {},
-        skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {},
+        skin_male = decodeJsonObject(gradeObject.skin_male, {}),
+        skin_female = decodeJsonObject(gradeObject.skin_female, {}),
     }
 
     -- Inventory
@@ -293,9 +311,9 @@ function loadESXPlayer(identifier, playerId, isNew)
 
             local loadout = json.decode(result.loadout)
             for name, weapon in pairs(loadout) do
-                local label = ESX.GetWeaponLabel(name)
+                local found, label = pcall(ESX.GetWeaponLabel, name)
 
-                if label then
+                if found and label then
                     userData.loadout[#userData.loadout + 1] = {
                         name = name,
                         ammo = weapon.ammo,
@@ -312,7 +330,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     userData.coords = json.decode(result.position) or Config.DefaultSpawns[ESX.Math.Random(1,#Config.DefaultSpawns)]
 
     -- Skin
-    userData.skin = (result.skin and result.skin ~= "") and json.decode(result.skin) or { sex = userData.sex == "f" and 1 or 0 }
+    userData.skin = decodeJsonObject(result.skin, { sex = result.sex == "f" and 1 or 0 })
 
     -- Metadata
     userData.metadata = (result.metadata and result.metadata ~= "") and json.decode(result.metadata) or {}
@@ -492,8 +510,11 @@ if not Config.CustomInventory then
 
             local _, weaponObject = ESX.GetWeapon(itemName)
             itemCount = weapon.ammo
-            local weaponComponents = ESX.Table.Clone(weapon.components)
+            local weaponComponents = xLib.table.clone(weapon.components)
             local weaponTint = weapon.tintIndex
+
+            sourceXPlayer.removeWeapon(itemName)
+            targetXPlayer.addWeapon(itemName, itemCount)
 
             if weaponTint then
                 targetXPlayer.setWeaponTint(itemName, weaponTint)
@@ -504,9 +525,6 @@ if not Config.CustomInventory then
                     targetXPlayer.addWeaponComponent(itemName, v)
                 end
             end
-
-            sourceXPlayer.removeWeapon(itemName)
-            targetXPlayer.addWeapon(itemName, itemCount)
 
             if weaponObject.ammo and itemCount > 0 then
                 local ammoLabel = weaponObject.ammo.label
@@ -604,7 +622,7 @@ if not Config.CustomInventory then
             local _, weaponObject = ESX.GetWeapon(itemName)
             -- luacheck: ignore weaponPickupLabel
             local weaponPickupLabel = ""
-            local components = ESX.Table.Clone(weapon.components)
+            local components = xLib.table.clone(weapon.components)
             xPlayer.removeWeapon(itemName)
 
             if weaponObject.ammo and weapon.ammo > 0 then
@@ -683,53 +701,52 @@ if not Config.CustomInventory then
     end)
 end
 
-ESX.RegisterServerCallback("esx:getPlayerData", function(source, cb)
+local function getPlayerData(xPlayer)
+    return {
+        identifier = xPlayer.identifier,
+        accounts = xPlayer.getAccounts(),
+        inventory = xPlayer.getInventory(),
+        job = xPlayer.getJob(),
+        loadout = xPlayer.getLoadout(),
+        money = xPlayer.getMoney(),
+        position = xPlayer.getCoords(true),
+        metadata = xPlayer.getMeta(),
+    }
+end
+
+xLib.callback.registerCompat("esx:getPlayerData", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if not xPlayer then
         return
     end
 
-    cb({
-        identifier = xPlayer.identifier,
-        accounts = xPlayer.getAccounts(),
-        inventory = xPlayer.getInventory(),
-        job = xPlayer.getJob(),
-        loadout = xPlayer.getLoadout(),
-        money = xPlayer.getMoney(),
-        position = xPlayer.getCoords(true),
-        metadata = xPlayer.getMeta(),
-    })
+    cb(getPlayerData(xPlayer))
 end)
 
-ESX.RegisterServerCallback("esx:isUserAdmin", function(source, cb)
+xLib.callback.registerCompat("esx:isUserAdmin", function(source, cb)
     cb(Core.IsPlayerAdmin(source))
 end)
 
-ESX.RegisterServerCallback("esx:getGameBuild", function(_, cb)
+xLib.callback.registerCompat("esx:getGameBuild", function(_, cb)
     cb(tonumber(GetConvar("sv_enforceGameBuild", "1604")))
 end)
 
-ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
+xLib.callback.registerCompat("esx:getOtherPlayerData", function(source, cb, target)
+    if not Core.IsPlayerAdmin(source) then
+        return cb(nil)
+    end
+
     local xPlayer = ESX.GetPlayerFromId(target)
 
     if not xPlayer then
-        return
+        return cb(nil)
     end
 
-    cb({
-        identifier = xPlayer.identifier,
-        accounts = xPlayer.getAccounts(),
-        inventory = xPlayer.getInventory(),
-        job = xPlayer.getJob(),
-        loadout = xPlayer.getLoadout(),
-        money = xPlayer.getMoney(),
-        position = xPlayer.getCoords(true),
-        metadata = xPlayer.getMeta(),
-    })
+    cb(getPlayerData(xPlayer))
 end)
 
-ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
+xLib.callback.registerCompat("esx:getPlayerNames", function(source, cb, players)
     players[source] = nil
 
     for playerId, _ in pairs(players) do
@@ -745,6 +762,27 @@ ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
     cb(players)
 end)
 
+<<<<<<< HEAD
+=======
+xLib.callback.registerCompat("esx:spawnVehicle", function(source, cb, vehData)
+    print('[^3WARNING^7] esx:spawnVehicle callback is deprecated and will be removed in a future update.')
+
+    local ped = GetPlayerPed(source)
+    ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
+        if vehData.warp then
+            local vehicle = NetworkGetEntityFromNetworkId(id)
+            local timeout = 0
+            while GetVehiclePedIsIn(ped, false) ~= vehicle and timeout <= 15 do
+                Wait(0)
+                TaskWarpPedIntoVehicle(ped, vehicle, -1)
+                timeout += 1
+            end
+        end
+        cb(id)
+    end)
+end)
+
+>>>>>>> fe59ca0bd6da59e2ec6eb4a8d06ece312e96ae7a
 AddEventHandler("txAdmin:events:scheduledRestart", function(eventData)
     if eventData.secondsRemaining == 60 then
         CreateThread(function()

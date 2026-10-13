@@ -25,7 +25,9 @@ function Adjustments:DisableNPCDrops()
 end
 
 function Adjustments:SeatShuffle()
-    if Config.DisableVehicleSeatShuff then
+    if Config.DisableVehicleSeatShuff and not self.seatShuffleRegistered then
+        self.seatShuffleRegistered = true
+
         AddEventHandler("esx:enteredVehicle", function(vehicle, _, seat)
             if seat > -1 then
                 SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, seat)
@@ -43,7 +45,7 @@ end
 
 function Adjustments:AmmoAndVehicleRewards()
     CreateThread(function()
-        while true do
+        while ESX.PlayerLoaded do
             if Config.DisableDisplayAmmo then
                 DisplayAmmoThisFrame(false)
             end
@@ -175,11 +177,11 @@ function Adjustments:ReplacePlaceholders(text)
         local success, result = pcall(cb)
 
         if not success then
-            error(("Failed to execute placeholder: ^5%s^7\n%s"):format(placeholder, result))
+            print(("[^1ERROR^7] Failed to execute placeholder: ^5%s^7\n%s"):format(placeholder, result))
             result = "Unknown"
         end
 
-        text = text:gsub(("{%s}"):format(placeholder), tostring(result))
+        text = text:gsub(("{%s}"):format(placeholder), (tostring(result):gsub("%%", "%%%%")))
     end
     return text
 end
@@ -187,7 +189,7 @@ end
 function Adjustments:DiscordPresence()
     if Config.DiscordActivity.appId ~= 0 then
         CreateThread(function()
-            while true do
+            while ESX.PlayerLoaded do
                 SetDiscordAppId(Config.DiscordActivity.appId)
                 SetRichPresence(self:ReplacePlaceholders(Config.DiscordActivity.presence))
                 SetDiscordRichPresenceAsset(Config.DiscordActivity.assetName)
@@ -213,7 +215,9 @@ function Adjustments:WantedLevel()
 end
 
 function Adjustments:DisableRadio()
-    if Config.RemoveHudComponents[16] then
+    if Config.RemoveHudComponents[16] and not self.disableRadioRegistered then
+        self.disableRadioRegistered = true
+
         AddEventHandler("esx:enteredVehicle", function(vehicle, plate, seat, displayName, netId)
             SetVehRadioStation(vehicle,"OFF")
             SetUserRadioControlEnabled(false)
@@ -223,7 +227,7 @@ end
 
 function Adjustments:Multipliers()
     CreateThread(function()
-        while true do
+        while ESX.PlayerLoaded do
             SetPedDensityMultiplierThisFrame(Config.Multipliers.pedDensity)
             SetScenarioPedDensityMultiplierThisFrame(Config.Multipliers.scenarioPedDensityInterior, Config.Multipliers.scenarioPedDensityExterior)
             SetAmbientVehicleRangeMultiplierThisFrame(Config.Multipliers.ambientVehicleRange)

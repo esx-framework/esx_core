@@ -251,7 +251,7 @@ if not multichar then
     end)
 end
 
-ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb, data)
+xLib.callback.registerCompat("esx_identity:registerIdentity", function(source, cb, data)
     local xPlayer = ESX.Player(source)
 
     if not checkNameFormat(data.firstname) then

@@ -1,10 +1,14 @@
+-- ESX glue over the generic xLib.cache.
+-- ped and weapon are tracked by the lib cache; this module mirrors them into
+-- ESX.PlayerData, re-emits the legacy esx: events resources depend on, and keeps
+-- the vehicle enter/exit state machine that produces the richer vehicle events.
+
 Actions = {}
 Actions._index = Actions
 
 Actions.inVehicle = false
 Actions.enteringVehicle = false
 Actions.inPauseMenu = false
-Actions.currentWeapon = false
 
 function Actions:GetSeatPedIsIn()
     for i = -1, 16 do
@@ -53,21 +57,6 @@ function Actions:TrackPedCoordsOnce()
             end
         })
     end)
-end
-
-function Actions:TrackPed()
-    local playerPed = ESX.PlayerData.ped
-    local newPed = PlayerPedId()
-
-    if playerPed ~= newPed then
-        ESX.SetPlayerData("ped", newPed)
-
-        TriggerEvent("esx:playerPedChanged", newPed)
-
-        if Config.EnableDebug then
-            print("[DEBUG] Player ped changed:", newPed)
-        end
-    end
 end
 
 function Actions:TrackPauseMenu()
@@ -189,46 +178,43 @@ function Actions:TrackSeat()
     end
 end
 
-function Actions:TrackWeapon()
-    ---@type number|false
-    local newWeapon = GetSelectedPedWeapon(ESX.PlayerData.ped)
-    newWeapon = newWeapon ~= `WEAPON_UNARMED` and newWeapon or false
-
-    if newWeapon ~= self.currentWeapon then
-        self.currentWeapon = newWeapon
-        ESX.SetPlayerData("weapon", self.currentWeapon)
-        TriggerEvent("esx:weaponChanged", self.currentWeapon)
-
-        if Config.EnableDebug then
-            print("[DEBUG] Weapon changed:", self.currentWeapon)
-        end
-    end
-end
-
 function Actions:SlowLoop()
     CreateThread(function()
         while ESX.PlayerLoaded do
             self:TrackPauseMenu()
             self:TrackVehicle()
-            self:TrackWeapon()
             Wait(500)
         end
     end)
 end
 
-function Actions:PedLoop()
-    CreateThread(function()
-        while ESX.PlayerLoaded do
-            self:TrackPed()
-            Wait(0)
-        end
-    end)
-end
-
 function Actions:Init()
+    -- Re-seed the cached values on every (re)login. The change handlers below are
+    -- registered once at file load so a relogin never stacks duplicate handlers.
+    ESX.SetPlayerData("ped", xLib.cache.ped)
+    ESX.SetPlayerData("weapon", xLib.cache.weapon)
+
     self:SlowLoop()
-    self:PedLoop()
     self:TrackPedCoordsOnce()
 end
+
+-- Mirror the lib cache into ESX.PlayerData and re-emit the legacy esx: events.
+AddEventHandler("xLib:cache:ped", function(ped)
+    ESX.SetPlayerData("ped", ped)
+    TriggerEvent("esx:playerPedChanged", ped)
+
+    if Config.EnableDebug then
+        print("[DEBUG] Player ped changed:", ped)
+    end
+end)
+
+AddEventHandler("xLib:cache:weapon", function(weapon)
+    ESX.SetPlayerData("weapon", weapon)
+    TriggerEvent("esx:weaponChanged", weapon)
+
+    if Config.EnableDebug then
+        print("[DEBUG] Weapon changed:", weapon)
+    end
+end)
 
 Actions:Init()

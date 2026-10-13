@@ -18,7 +18,7 @@ end)
 ESX.SecureNetEvent("esx_multicharacter:SetupUI", function(data, slots)
     if not nuiReady then
         print('[WARNING]', 'NUI not ready yet, awaiting...')
-        ESX.Await(function()
+        xLib.waitFor(function()
             return nuiReady == true
         end, 'NUI Failed to load after 10000ms', 10000)
     end
@@ -47,7 +47,7 @@ if Config.Relog then
             Multicharacter.canRelog = false
             TriggerServerEvent("esx_multicharacter:relog")
 
-            ESX.SetTimeout(10000, function()
+            xLib.timeout.setTimeout(10000, function()
                 Multicharacter.canRelog = true
             end)
         end

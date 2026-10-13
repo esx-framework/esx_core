@@ -1,15 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export type Control = "TOP" | "DOWN" | "ENTER" | "BACKSPACE" | "LEFT" | "RIGHT";
 
 interface Props {
   elements: any[];
   position: number;
-  setPosition: (p: number | ((prev: number) => number)) => void;
-  submit: () => void;
+  setPosition: (p: number) => void;
+  submit: (position?: number) => void;
   cancel: () => void;
-  changeLeft: () => void;
-  changeRight: () => void;
+  change: (position?: number) => void;
+  changeLeft: (position?: number) => void;
+  changeRight: (position?: number) => void;
 }
 
 export const useControls = ({
@@ -18,9 +19,16 @@ export const useControls = ({
   setPosition,
   submit,
   cancel,
+  change,
   changeLeft,
   changeRight,
 }: Props) => {
+  const positionRef = useRef(position);
+
+  useEffect(() => {
+    positionRef.current = position;
+  }, [position]);
+
   useEffect(() => {
     const onMessage = (
       ev: MessageEvent<{ action: string; control: Control }>
@@ -43,24 +51,30 @@ export const useControls = ({
         return next;
       };
 
+      const moveTo = (next: number) => {
+        positionRef.current = next;
+        setPosition(next);
+        change(next);
+      };
+
       switch (ev.data.control) {
         case "TOP":
-          setPosition((p) => skipUp(typeof p === "number" ? p : position));
+          moveTo(skipUp(positionRef.current));
           break;
         case "DOWN":
-          setPosition((p) => skipDown(typeof p === "number" ? p : position));
+          moveTo(skipDown(positionRef.current));
           break;
         case "ENTER":
-          if (!elements[position]?.unselectable) submit();
+          if (!elements[positionRef.current]?.unselectable) submit(positionRef.current);
           break;
         case "BACKSPACE":
           cancel();
           break;
         case "LEFT":
-          changeLeft();
+          changeLeft(positionRef.current);
           break;
         case "RIGHT":
-          changeRight();
+          changeRight(positionRef.current);
           break;
       }
     };
@@ -73,6 +87,7 @@ export const useControls = ({
     setPosition,
     submit,
     cancel,
+    change,
     changeLeft,
     changeRight,
   ]);

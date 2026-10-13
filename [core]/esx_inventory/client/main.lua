@@ -4,7 +4,8 @@
 ---@field icon string
 ---@field count number
 ---@field value string
----@field usable boolean
+---@field canUse boolean?
+---@field usable boolean?
 ---@field rare boolean
 ---@field canRemove boolean
 ---@field unselectable boolean?
@@ -34,7 +35,6 @@ local function appendAccounts(elements)
                 icon = "fas fa-money-bill-wave",
                 count = account.money,
                 value = account.name,
-                usable = false,
                 rare = false,
                 canRemove = canDrop
             }
@@ -56,7 +56,7 @@ local function appendItems(elements)
                 icon = "fas fa-box",
                 count = item.count,
                 value = item.name,
-                usable = item.usable,
+                canUse = item.usable,
                 rare = item.rare,
                 canRemove = item.canRemove
             }
@@ -83,7 +83,6 @@ local function appendLoadout(elements)
             icon = "fas fa-gun",
             count = 1,
             value = weapon.name,
-            usable = false,
             rare = false,
             ammo = ammo,
             canGiveAmmo = (weapon.ammo ~= nil),
@@ -119,7 +118,7 @@ end
 ---@return table
 local function buildItemActionMenu(selected, playerNearby)
     local elements2 = {}
-    if selected.usable then
+    if selected.canUse then
         elements2[#elements2 + 1] = { action = "use", label = TranslateCap("use"), icon = "fas fa-utensils", type = selected.type, value = selected.value }
     end
     if selected.canRemove then
@@ -146,7 +145,6 @@ local function openQuantityDialog(title, maxCount)
         local qty = tonumber(data.value)
         if not qty or qty <= 0 or qty > maxCount then
             ESX.ShowNotification(TranslateCap("amount_invalid"))
-            p:resolve(nil)
         else
             menu.close()
             p:resolve(qty)
@@ -195,7 +193,7 @@ local function showInventory()
         local selected = data.current --[[@as InventoryElement]]
         if selected.unselectable then return end
 
-        local closestPlayer, dist = ESX.Game.GetClosestPlayer()
+        local closestPlayer, dist = xLib.game.getClosestPlayer()
         local playerNearby = closestPlayer ~= -1 and dist <= 3.0
 
         ESX.UI.Menu.Open("default", ESX.currentResourceName, "esx_inventory_actions", {
@@ -213,11 +211,17 @@ local function showInventory()
 end
 exports("ShowInventory", showInventory)
 
-ESX.RegisterInput("showinv", TranslateCap("keymap_showinventory"), "keyboard", "F2", function()
+xLib.addKeybind({
+    name = "showinv",
+    description = TranslateCap("keymap_showinventory"),
+    defaultMapper = "keyboard",
+    defaultKey = "F2",
+    onPressed = function()
     if not ESX.PlayerData.dead then
         showInventory()
     end
-end)
+end,
+})
 
 local function refreshInventory()
     if not ESX.UI.Menu.IsOpen("default", ESX.currentResourceName, "esx_inventory_main") and

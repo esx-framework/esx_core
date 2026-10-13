@@ -4,6 +4,11 @@ local txAdminLocale = GetConvar("txAdmin-locale", "en")
 local esxLocale = GetConvar("esx:locale", "invalid")
 Config.Locale = (esxLocale ~= "invalid") and esxLocale or (txAdminLocale ~= "custom" and txAdminLocale) or "en"
 
+-- When a key is missing from the active locale, fall back to the English string
+-- instead of returning a placeholder. Set convar "esx:localeFallback" to "false"
+-- to keep the placeholder (useful when authoring a new translation).
+Config.LocaleFallback = GetConvar("esx:localeFallback", "true") ~= "false"
+
 -- For ox inventory, this will automatically be adjusted, do not change! For other inventories, leave as false unless specifically instructed to change.
 Config.CustomInventory = false
 
@@ -34,9 +39,50 @@ Config.DefaultSpawns = {              -- If you want to have more spawn position
     --{x = 233.5459, y = -868.2626, z = 30.2922, heading = 1.0}
 }
 
+---@deprecated Use `Config.CommandPermissions` as the single source of truth for command ACLs.
+--- Kept temporarily for backwards compatibility with external resources that still read `Config.AdminGroups`.
+--- Will be removed in ESX 1.15.
 Config.AdminGroups = {
     ["owner"] = true,
     ["admin"] = true,
+}
+
+Config.CommandPermissions = {
+    ["setcoords"]           = { "owner", "admin" }, -- /setcoords, /tp
+    ["setjob"]              = { "owner", "admin" },
+    ["car"]                 = { "owner", "admin" },
+    ["cardel"]              = { "owner", "admin" }, -- /cardel, /dv
+    ["fix"]                 = { "owner", "admin" }, -- /fix, /repair
+    ["setaccountmoney"]     = { "owner", "admin" },
+    ["giveaccountmoney"]    = { "owner", "admin" },
+    ["removeaccountmoney"]  = { "owner", "admin" },
+    ["giveitem"]            = { "owner", "admin" },
+    ["giveweapon"]          = { "owner", "admin" },
+    ["giveammo"]            = { "owner", "admin" },
+    ["giveweaponcomponent"] = { "owner", "admin" },
+    ["clearall"]            = { "owner", "admin" }, -- /clearall, /clsall
+    ["refreshjobs"]         = { "owner", "admin" },
+    ["refreshitems"]        = { "owner", "admin" },
+    ["clearinventory"]      = { "owner", "admin" },
+    ["clearloadout"]        = { "owner", "admin" },
+    ["setgroup"]            = { "owner", "admin" },
+    ["save"]                = { "owner", "admin" },
+    ["saveall"]             = { "owner", "admin" },
+    ["goto"]                = { "owner", "admin" },
+    ["bring"]               = { "owner", "admin" },
+    ["kill"]                = { "owner", "admin" },
+    ["freeze"]              = { "owner", "admin" },
+    ["unfreeze"]            = { "owner", "admin" },
+    ["setdim"]              = { "owner", "admin" }, -- /setdim, /setbucket
+    ["players"]             = { "owner", "admin" },
+    ["noclip"]              = { "owner", "admin" },
+    ["tpm"]                 = { "owner", "admin" },
+    ["coords"]              = { "owner", "admin" },
+    ["clear"]               = { "user", "admin", "owner" }, -- /clear, /cls
+    ["group"]               = { "user", "admin", "owner" },
+    ["job"]                 = { "user", "admin", "owner" },
+    ["info"]                = { "user", "admin", "owner" },
+    ["playtime"]            = { "user", "admin", "owner" },
 }
 
 Config.ValidCharacterSets = { -- Only enable additional charsets if your server is multilingual. By default everything is false.

@@ -9,11 +9,12 @@
 ---@field public onFinish? function
 
 local CurrentProgress = nil
+local progressCount = 0
 
-local function startProcessing()
-    while (CurrentProgress ~= nil) do
-        if CurrentProgress.length > 0 then
-            CurrentProgress.length = CurrentProgress.length - 1000
+local function startProcessing(id)
+    while CurrentProgress ~= nil and CurrentProgress.id == id do
+        if GetGameTimer() < CurrentProgress.finishAt then
+            Wait(50)
         else
             ClearPedTasks(ESX.PlayerData.ped)
             if CurrentProgress.FreezePlayer then
@@ -24,7 +25,6 @@ local function startProcessing()
             end
             CurrentProgress = nil
         end
-        Wait(1000)
     end
 end
 
@@ -39,7 +39,7 @@ local function Progressbar(message, length, Options)
     CurrentProgress = Options or {}
     if CurrentProgress.animation then
         if CurrentProgress.animation.type == "anim" then
-            ESX.Streaming.RequestAnimDict(CurrentProgress.animation.dict, function()
+            xLib.streaming.requestAnimDict(CurrentProgress.animation.dict, function()
                 TaskPlayAnim(ESX.PlayerData.ped, CurrentProgress.animation.dict, CurrentProgress.animation.lib, 1.0, 1.0, length, 1, 1.0, false, false, false)
                 RemoveAnimDict(CurrentProgress.animation.dict)
             end)
@@ -55,8 +55,15 @@ local function Progressbar(message, length, Options)
         length = length or 3000,
         message = message or "ESX-Framework",
     })
+    progressCount = progressCount + 1
+    CurrentProgress.id = progressCount
     CurrentProgress.length = length or 3000
-    CreateThread(startProcessing);
+    CurrentProgress.finishAt = GetGameTimer() + CurrentProgress.length
+
+    local id = progressCount
+    CreateThread(function()
+        startProcessing(id)
+    end)
     return true;
 end
 
@@ -79,7 +86,13 @@ local function CancelProgressbar()
     CurrentProgress = nil
 end
 
-ESX.RegisterInput("cancelprog", "[ProgressBar] Cancel Progressbar", "keyboard", "BACK", CancelProgressbar)
+xLib.addKeybind({
+    name = "cancelprog",
+    description = "[ProgressBar] Cancel Progressbar",
+    defaultMapper = "keyboard",
+    defaultKey = "BACK",
+    onPressed = CancelProgressbar,
+})
 
 exports("Progressbar", Progressbar)
 exports("CancelProgressbar", CancelProgressbar)

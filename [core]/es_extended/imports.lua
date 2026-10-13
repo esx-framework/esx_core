@@ -87,7 +87,7 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         end)
     end
 
-    local external = { { "Class", "class.lua" }, { "Point", "point.lua" } }
+    local external = { { "Class", "class.lua" } }
     for i = 1, #external do
         local module = external[i]
         local path = string.format("client/imports/%s", module[2])
@@ -241,7 +241,7 @@ if GetResourceState("ox_lib") == "missing" then
             local file = tempData[1]
             local resource = tempData[2]
 
-            ESX.Table.Wipe(tempData)
+            xLib.table.wipe(tempData)
             return assert(load(file, ('@@%s/%s'):format(resource, fileName), 't', env or _ENV))
         end
 

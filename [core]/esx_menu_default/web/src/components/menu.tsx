@@ -17,32 +17,43 @@ const Menu: React.FC<Props> = ({ data }) => {
 
   const elements = data.elements;
 
-  const payload = () => ({
-    _namespace: data.namespace,
-    _name: data.name,
-    current: elements[position],
-    elements,
-  });
+  const payload = (targetPosition = position) => {
+    const selectedPosition = Math.max(
+      0,
+      Math.min(targetPosition, Math.max(0, elements.length - 1)),
+    );
+    const payloadElements = elements.map((element, index) => ({
+      ...element,
+      selected: index === selectedPosition,
+    }));
 
-  const submit = () => {
-    const el = elements[position];
+    return {
+      _namespace: data.namespace,
+      _name: data.name,
+      current: payloadElements[selectedPosition],
+      elements: payloadElements,
+    };
+  };
+
+  const submit = (targetPosition = position) => {
+    const el = elements[targetPosition];
     if (el?.usable === false) return;
 
-    fetchNui("menu_submit", payload());
+    fetchNui("menu_submit", payload(targetPosition));
   };
 
   const cancel = () =>
     fetchNui("menu_cancel", { _namespace: data.namespace, _name: data.name });
 
-  const change = () => {
-    const el = elements[position];
+  const change = (targetPosition = position) => {
+    const el = elements[targetPosition];
     if (el?.usable === false) return;
 
-    fetchNui("menu_change", payload());
+    fetchNui("menu_change", payload(targetPosition));
   };
 
-  const stepSelectedSlider = (delta: number) => {
-    const el = elements[position];
+  const stepSelectedSlider = (delta: number, targetPosition = position) => {
+    const el = elements[targetPosition];
 
     if (el?.usable === false) return;
     if (el?.type !== "slider") return;
@@ -63,20 +74,18 @@ const Menu: React.FC<Props> = ({ data }) => {
     }
 
     forceRender();
-    change();
+    change(targetPosition);
   };
 
   useControls({
     elements,
     position,
-    setPosition: (updater) => {
-      setPosition(updater);
-      change();
-    },
+    setPosition,
     submit,
     cancel,
-    changeLeft: () => stepSelectedSlider(-1),
-    changeRight: () => stepSelectedSlider(1),
+    change,
+    changeLeft: (targetPosition) => stepSelectedSlider(-1, targetPosition),
+    changeRight: (targetPosition) => stepSelectedSlider(1, targetPosition),
   });
 
   useEffect(() => {
@@ -93,7 +102,10 @@ const Menu: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     if (elements[position]?.unselectable) {
       const firstSelectable = elements.findIndex((el) => !el.unselectable);
-      if (firstSelectable !== -1) setPosition(firstSelectable);
+      if (firstSelectable !== -1) {
+        setPosition(firstSelectable);
+        change(firstSelectable);
+      }
     }
   }, []);
 

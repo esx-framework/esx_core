@@ -50,7 +50,7 @@ local function HideComponents(hide)
         else
             if HiddenCompents[components[i]] then
                 local size = HiddenCompents[components[i]]
-                SetHudComponentSize(components[i], size.x, size.z)
+                SetHudComponentSize(components[i], size.x, size.y)
                 HiddenCompents[components[i]] = nil
             end
         end
@@ -59,9 +59,9 @@ local function HideComponents(hide)
 end
 
 function Multicharacter:HideHud(hide)
-    self.hidePlayers = true
+    self.hidePlayers = hide
 
-    MumbleSetVolumeOverride(ESX.PlayerId, 0.0)
+    MumbleSetVolumeOverride(ESX.playerId, hide and 0.0 or -1.0)
     HideComponents(hide)
 end
 
@@ -77,7 +77,7 @@ function Multicharacter:SetupCharacters()
     SetEntityCoords(self.playerPed, self.spawnCoords.x, self.spawnCoords.y, self.spawnCoords.z, true, false, false, false)
     SetEntityHeading(self.playerPed, self.spawnCoords.w)
 
-    SetPlayerControl(ESX.PlayerId, false, 0)
+    SetPlayerControl(ESX.playerId, false, 0)
     self:SetupCamera()
     self:HideHud(true)
 
@@ -121,7 +121,7 @@ function Multicharacter:ChangeExistingPed()
     end
 
     if spawnedCharacter and spawnedCharacter.model then
-        local model = ESX.Streaming.RequestModel(newCharacter.model)
+        local model = xLib.streaming.requestModel(newCharacter.model)
         if model then
             SetPlayerModel(ESX.playerId, newCharacter.model)
             SetModelAsNoLongerNeeded(newCharacter.model)
@@ -208,7 +208,7 @@ function Multicharacter:SetDefaultSkin(playerData)
 
     local model = skin.sex == 0 and `mp_m_freemode_01` or `mp_f_freemode_01`
     ---@diagnostic disable-next-line: cast-local-type
-    model = ESX.Streaming.RequestModel(model)
+    model = xLib.streaming.requestModel(model)
 
     if not model then
         return
