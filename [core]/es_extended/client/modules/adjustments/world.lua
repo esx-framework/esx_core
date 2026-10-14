@@ -1,6 +1,30 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
+-- Optional server-owned population override. Cache state-bag changes instead of
+-- deserializing GlobalState on every frame or running a competing resource loop.
+local populationDensity
+local function updatePopulationDensity(value)
+    if type(value) ~= "table" then
+        populationDensity = nil
+        return
+    end
+
+    local density = {}
+    for _, key in ipairs({ "pedDensity", "vehicleDensity", "randomVehicleDensity" }) do
+        local multiplier = value[key]
+        if type(multiplier) == "number" and multiplier == multiplier and multiplier >= 0 and multiplier <= 1 then
+            density[key] = multiplier
+        end
+    end
+    populationDensity = density
+end
+
+AddStateBagChangeHandler("esx:populationDensity", "global", function(_, _, value)
+    updatePopulationDensity(value)
+end)
+updatePopulationDensity(GlobalState["esx:populationDensity"])
+
 function Adjustments:DisableNPCDrops()
     if Config.DisableNPCDrops then
         local weaponPickups = { `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`, `PICKUP_WEAPON_PUMPSHOTGUN` }
@@ -87,12 +111,16 @@ end
 function Adjustments:Multipliers()
     CreateThread(function()
         while ESX.PlayerLoaded do
-            SetPedDensityMultiplierThisFrame(Config.Multipliers.pedDensity)
-            SetScenarioPedDensityMultiplierThisFrame(Config.Multipliers.scenarioPedDensityInterior, Config.Multipliers.scenarioPedDensityExterior)
+            local density = populationDensity
+            local pedDensity = density and density.pedDensity
+            local vehicleDensity = density and density.vehicleDensity
+            local randomVehicleDensity = density and density.randomVehicleDensity
+            SetPedDensityMultiplierThisFrame(pedDensity or Config.Multipliers.pedDensity)
+            SetScenarioPedDensityMultiplierThisFrame(pedDensity or Config.Multipliers.scenarioPedDensityInterior, pedDensity or Config.Multipliers.scenarioPedDensityExterior)
             SetAmbientVehicleRangeMultiplierThisFrame(Config.Multipliers.ambientVehicleRange)
-            SetParkedVehicleDensityMultiplierThisFrame(Config.Multipliers.parkedVehicleDensity)
-            SetRandomVehicleDensityMultiplierThisFrame(Config.Multipliers.randomVehicleDensity)
-            SetVehicleDensityMultiplierThisFrame(Config.Multipliers.vehicleDensity)
+            SetParkedVehicleDensityMultiplierThisFrame(vehicleDensity or Config.Multipliers.parkedVehicleDensity)
+            SetRandomVehicleDensityMultiplierThisFrame(randomVehicleDensity or Config.Multipliers.randomVehicleDensity)
+            SetVehicleDensityMultiplierThisFrame(vehicleDensity or Config.Multipliers.vehicleDensity)
             Wait(0)
         end
     end)
