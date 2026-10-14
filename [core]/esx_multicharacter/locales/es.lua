@@ -23,5 +23,10 @@ Locales["es"] = {
         ["play"] = "JUGAR",
         ["action_failed"] = "No se pudo completar la acción. Vuelve a intentarlo.",
         ["action_pending"] = "Espera un momento...",
+        ["relog_busy"] = "Tu personaje todavía está cerrando sesión. Espera un momento.",
+        ["relog_rate_limited"] = "Espera un momento antes de volver a cambiar de personaje.",
+        ["relog_not_loaded"] = "Tu personaje no está cargado. Vuelve a conectarte al servidor.",
+        ["relog_disabled"] = "El cambio de personaje está desactivado en este servidor.",
+        ["relog_stale_session"] = "La sesión de tu personaje ha cambiado. Vuelve a conectarte al servidor.",
     }
 }
