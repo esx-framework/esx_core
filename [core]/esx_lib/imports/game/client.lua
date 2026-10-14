@@ -265,6 +265,24 @@ local function trim(value)
     return (string.gsub(value, "^%s*(.-)%s*$", "%1"))
 end
 
+local vehicleTyreIndices <const> = { 0, 1, 2, 3, 4, 5, 6, 7, 45, 47 }
+
+local function getIndexedVehicleProperty(properties, index)
+    if type(properties) ~= "table" then
+        return nil
+    end
+
+    local value = properties[tostring(index)]
+    if value == nil then
+        value = properties[index]
+    end
+    return value
+end
+
+local function isFiniteVehicleProperty(value)
+    return type(value) == "number" and value == value and value ~= math.huge and value ~= -math.huge
+end
+
 ---@param vehicle integer The vehicle to get the properties of
 ---@return table | nil
 function xLib.game.getVehicleProperties(vehicle)
@@ -277,6 +295,8 @@ function xLib.game.getVehicleProperties(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
     local dashboardColor = GetVehicleDashboardColor(vehicle)
     local interiorColor = GetVehicleInteriorColour(vehicle)
+    local paintType1 = GetVehicleModColor_1(vehicle)
+    local paintType2 = GetVehicleModColor_2(vehicle)
 
     if GetIsVehiclePrimaryColourCustom(vehicle) then
         colorPrimary = { GetVehicleCustomPrimaryColour(vehicle) }
@@ -292,6 +312,11 @@ function xLib.game.getVehicleProperties(vehicle)
         customXenonColor = { customXenonColorR, customXenonColorG, customXenonColorB }
     end
 
+    local driftTyres
+    if GetGameBuildNumber() >= 2372 then
+        driftTyres = GetDriftTyresEnabled(vehicle)
+    end
+
     local extras = {}
     for extraId = 0, 20 do
         if DoesExtraExist(vehicle, extraId) then
@@ -299,20 +324,20 @@ function xLib.game.getVehicleProperties(vehicle)
         end
     end
 
-    local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
-    local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
+    local doorsBroken, doorsAngleRatio, windowsBroken = {}, {}, {}
+    local tyreBurst, tyreBurstComplete, wheelHealth, wheelsBroken = {}, {}, {}, {}
 
-    local TyresIndex = { -- Wheel index list according to the number of vehicle wheels.
-        ["2"] = { 0, 4 }, -- Bike and cycle.
-        ["3"] = { 0, 1, 4, 5 }, -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
-        ["4"] = { 0, 1, 4, 5 }, -- Vehicle with 4 wheels.
-        ["6"] = { 0, 1, 2, 3, 4, 5 }, -- Vehicle with 6 wheels.
-    }
+    for _, index in ipairs(vehicleTyreIndices) do
+        local key = tostring(index)
+        local completelyBurst = IsVehicleTyreBurst(vehicle, index, true)
+        tyreBurst[key] = completelyBurst or IsVehicleTyreBurst(vehicle, index, false)
+        tyreBurstComplete[key] = completelyBurst
+    end
 
-    if TyresIndex[numWheels] then
-        for _, idx in pairs(TyresIndex[numWheels]) do
-            tyreBurst[tostring(idx)] = IsVehicleTyreBurst(vehicle, idx, false)
-        end
+    for index = 0, GetVehicleNumberOfWheels(vehicle) - 1 do
+        local key = tostring(index)
+        wheelHealth[key] = GetVehicleWheelHealth(vehicle, index)
+        wheelsBroken[key] = IsVehicleWheelBrokenOff(vehicle, index)
     end
 
     for windowId = 0, 7 do -- 13
@@ -320,19 +345,25 @@ function xLib.game.getVehicleProperties(vehicle)
         windowsBroken[tostring(windowId)] = not IsVehicleWindowIntact(vehicle, windowId)
     end
 
-    local numDoors = GetNumberOfVehicleDoors(vehicle)
-    if numDoors and numDoors > 0 then
-        for doorsId = 0, numDoors do
-            doorsBroken[tostring(doorsId)] = IsVehicleDoorDamaged(vehicle, doorsId)
+    for doorId = 0, 5 do
+        if GetIsDoorValid(vehicle, doorId) then
+            local key = tostring(doorId)
+            doorsBroken[key] = IsVehicleDoorDamaged(vehicle, doorId)
+            doorsAngleRatio[key] = GetVehicleDoorAngleRatio(vehicle, doorId)
         end
     end
 
     return {
         model = GetEntityModel(vehicle),
         doorsBroken = doorsBroken,
+        doorsAngleRatio = doorsAngleRatio,
         windowsBroken = windowsBroken,
         tyreBurst = tyreBurst,
+        tyreBurstComplete = tyreBurstComplete,
+        wheelHealth = wheelHealth,
+        wheelsBroken = wheelsBroken,
         tyresCanBurst = GetVehicleTyresCanBurst(vehicle),
+        driftTyres = driftTyres,
         plate = trim(GetVehicleNumberPlateText(vehicle)),
         plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
 
@@ -341,9 +372,13 @@ function xLib.game.getVehicleProperties(vehicle)
         tankHealth = round(GetVehiclePetrolTankHealth(vehicle), 1),
 
         fuelLevel = round(GetVehicleFuelLevel(vehicle), 1),
+        oilLevel = GetVehicleOilLevel(vehicle),
         dirtLevel = round(GetVehicleDirtLevel(vehicle), 1),
+        paintFade = GetVehicleEnveffScale(vehicle),
         color1 = colorPrimary,
         color2 = colorSecondary,
+        paintType1 = paintType1,
+        paintType2 = paintType2,
 
         pearlescentColor = pearlescentColor,
         wheelColor = wheelColor,
@@ -352,9 +387,13 @@ function xLib.game.getVehicleProperties(vehicle)
         interiorColor = interiorColor,
 
         wheels = GetVehicleWheelType(vehicle),
+        wheelSize = GetVehicleWheelSize(vehicle),
+        wheelWidth = GetVehicleWheelWidth(vehicle),
+        roofState = IsVehicleAConvertible(vehicle, false) and GetConvertibleRoofState(vehicle) or nil,
         windowTint = GetVehicleWindowTint(vehicle),
         xenonColor = GetVehicleXenonLightsColor(vehicle),
         customXenonColor = customXenonColor,
+        customXenonColorEnabled = hasCustomXenonColor,
 
         neonEnabled = { IsVehicleNeonLightEnabled(vehicle, 0), IsVehicleNeonLightEnabled(vehicle, 1), IsVehicleNeonLightEnabled(vehicle, 2), IsVehicleNeonLightEnabled(vehicle, 3) },
 
@@ -382,8 +421,11 @@ function xLib.game.getVehicleProperties(vehicle)
         modSuspension = GetVehicleMod(vehicle, 15),
         modArmor = GetVehicleMod(vehicle, 16),
 
+        modNitrous = IsToggleModOn(vehicle, 17),
         modTurbo = IsToggleModOn(vehicle, 18),
+        modSubwoofer = IsToggleModOn(vehicle, 19),
         modSmokeEnabled = IsToggleModOn(vehicle, 20),
+        modHydraulics = IsToggleModOn(vehicle, 21),
         modXenon = IsToggleModOn(vehicle, 22),
 
         modFrontWheels = GetVehicleMod(vehicle, 23),
@@ -413,7 +455,10 @@ function xLib.game.getVehicleProperties(vehicle)
         modTrimB = GetVehicleMod(vehicle, 44),
         modTank = GetVehicleMod(vehicle, 45),
         modWindows = GetVehicleMod(vehicle, 46),
+        modDoorR = GetVehicleMod(vehicle, 47),
         modLivery = GetVehicleMod(vehicle, 48) == -1 and GetVehicleLivery(vehicle) or GetVehicleMod(vehicle, 48),
+        modLiveryIndex = GetVehicleMod(vehicle, 48),
+        livery = GetVehicleLivery(vehicle),
         modLightbar = GetVehicleMod(vehicle, 49),
     }
 end
@@ -442,6 +487,9 @@ function xLib.game.setVehicleProperties(vehicle, props)
     if props.tyresCanBurst ~= nil then
         SetVehicleTyresCanBurst(vehicle, props.tyresCanBurst)
     end
+    if props.driftTyres ~= nil and GetGameBuildNumber() >= 2372 then
+        SetDriftTyresEnabled(vehicle, props.driftTyres)
+    end
 
     if props.plate ~= nil then
         SetVehicleNumberPlateText(vehicle, props.plate)
@@ -461,13 +509,26 @@ function xLib.game.setVehicleProperties(vehicle, props)
     if props.fuelLevel ~= nil then
         SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0)
     end
+    if props.oilLevel ~= nil and isFiniteVehicleProperty(props.oilLevel) then
+        SetVehicleOilLevel(vehicle, props.oilLevel + 0.0)
+    end
     if props.dirtLevel ~= nil then
         SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0)
+    end
+    if isFiniteVehicleProperty(props.paintFade) then
+        SetVehicleEnveffScale(vehicle, math.max(0.0, math.min(props.paintFade, 1.0)))
+    end
+    if props.paintType1 ~= nil then
+        SetVehicleModColor_1(vehicle, props.paintType1, type(props.color1) == "number" and props.color1 or colorPrimary, props.pearlescentColor or pearlescentColor)
+    end
+    if props.paintType2 ~= nil then
+        SetVehicleModColor_2(vehicle, props.paintType2, type(props.color2) == "number" and props.color2 or colorSecondary)
     end
     if props.color1 ~= nil then
         if type(props.color1) == "table" then
             SetVehicleCustomPrimaryColour(vehicle, props.color1[1], props.color1[2], props.color1[3])
         else
+            ClearVehicleCustomPrimaryColour(vehicle)
             SetVehicleColours(vehicle, props.color1, colorSecondary)
         end
     end
@@ -475,6 +536,7 @@ function xLib.game.setVehicleProperties(vehicle, props)
         if type(props.color2) == "table" then
             SetVehicleCustomSecondaryColour(vehicle, props.color2[1], props.color2[2], props.color2[3])
         else
+            ClearVehicleCustomSecondaryColour(vehicle)
             SetVehicleColours(vehicle, type(props.color1) == "number" and props.color1 or colorPrimary, props.color2)
         end
     end
@@ -524,9 +586,11 @@ function xLib.game.setVehicleProperties(vehicle, props)
     end
     if props.customXenonColor ~= nil then
         SetVehicleXenonLightsCustomColor(vehicle, props.customXenonColor[1], props.customXenonColor[2], props.customXenonColor[3])
+    elseif props.customXenonColorEnabled == false then
+        ClearVehicleXenonLightsCustomColor(vehicle)
     end
     if props.modSmokeEnabled ~= nil then
-        ToggleVehicleMod(vehicle, 20, true)
+        ToggleVehicleMod(vehicle, 20, props.modSmokeEnabled)
     end
     if props.tyreSmokeColor ~= nil then
         SetVehicleTyreSmokeColor(vehicle, props.tyreSmokeColor[1], props.tyreSmokeColor[2], props.tyreSmokeColor[3])
@@ -587,8 +651,17 @@ function xLib.game.setVehicleProperties(vehicle, props)
     if props.modArmor ~= nil then
         SetVehicleMod(vehicle, 16, props.modArmor, false)
     end
+    if props.modNitrous ~= nil then
+        ToggleVehicleMod(vehicle, 17, props.modNitrous)
+    end
     if props.modTurbo ~= nil then
         ToggleVehicleMod(vehicle, 18, props.modTurbo)
+    end
+    if props.modSubwoofer ~= nil then
+        ToggleVehicleMod(vehicle, 19, props.modSubwoofer)
+    end
+    if props.modHydraulics ~= nil then
+        ToggleVehicleMod(vehicle, 21, props.modHydraulics)
     end
     if props.modXenon ~= nil then
         ToggleVehicleMod(vehicle, 22, props.modXenon)
@@ -666,9 +739,38 @@ function xLib.game.setVehicleProperties(vehicle, props)
         SetVehicleMod(vehicle, 46, props.modWindows, false)
     end
 
-    if props.modLivery ~= nil then
+    if props.modDoorR ~= nil then
+        SetVehicleMod(vehicle, 47, props.modDoorR, false)
+    end
+
+    if props.modLiveryIndex ~= nil then
+        SetVehicleMod(vehicle, 48, props.modLiveryIndex, false)
+    elseif props.modLivery ~= nil then
         SetVehicleMod(vehicle, 48, props.modLivery, false)
+    end
+    if props.modLivery ~= nil and props.livery == nil then
         SetVehicleLivery(vehicle, props.modLivery)
+    end
+    if props.livery ~= nil then
+        SetVehicleLivery(vehicle, props.livery)
+    end
+    if props.modLightbar ~= nil then
+        SetVehicleMod(vehicle, 49, props.modLightbar, false)
+    end
+
+    if isFiniteVehicleProperty(props.wheelSize) and props.wheelSize > 0 then
+        SetVehicleWheelSize(vehicle, props.wheelSize + 0.0)
+    end
+    if isFiniteVehicleProperty(props.wheelWidth) and props.wheelWidth > 0 then
+        SetVehicleWheelWidth(vehicle, props.wheelWidth + 0.0)
+    end
+
+    if props.roofState ~= nil and IsVehicleAConvertible(vehicle, false) then
+        if props.roofState == 1 or props.roofState == 2 or props.roofState == 6 then
+            LowerConvertibleRoof(vehicle, true)
+        elseif props.roofState == 0 or props.roofState == 3 or props.roofState == 4 or props.roofState == 5 then
+            RaiseConvertibleRoof(vehicle, true)
+        end
     end
 
     if props.windowsBroken ~= nil then
@@ -693,14 +795,38 @@ function xLib.game.setVehicleProperties(vehicle, props)
         end
     end
 
-    if props.tyreBurst ~= nil then
-        for k, v in pairs(props.tyreBurst) do
-            if v then
-                k = tonumber(k)
-                if k then
-                    SetVehicleTyreBurst(vehicle, k, true, 1000.0)
-                end
+    for doorId = 0, 7 do
+        local angle = getIndexedVehicleProperty(props.doorsAngleRatio, doorId)
+        if isFiniteVehicleProperty(angle) and GetIsDoorValid(vehicle, doorId) and not IsVehicleDoorDamaged(vehicle, doorId) then
+            if angle <= 0 then
+                SetVehicleDoorShut(vehicle, doorId, true)
+            else
+                SetVehicleDoorControl(vehicle, doorId, 5, math.min(angle, 1.0))
             end
+        end
+    end
+
+    for _, index in ipairs(vehicleTyreIndices) do
+        local burst = getIndexedVehicleProperty(props.tyreBurst, index)
+        local completelyBurst = getIndexedVehicleProperty(props.tyreBurstComplete, index)
+        if burst == true or completelyBurst == true then
+            if completelyBurst ~= nil then
+                SetVehicleTyreFixed(vehicle, index)
+            end
+            +
+            SetVehicleTyreBurst(vehicle, index, completelyBurst == nil or completelyBurst == true, 1000.0)
+        elseif burst == false then
+            SetVehicleTyreFixed(vehicle, index)
+        end
+    end
+
+    for index = 0, GetVehicleNumberOfWheels(vehicle) - 1 do
+        local health = getIndexedVehicleProperty(props.wheelHealth, index)
+        if isFiniteVehicleProperty(health) then
+            SetVehicleWheelHealth(vehicle, index, health + 0.0)
+        end
+        if getIndexedVehicleProperty(props.wheelsBroken, index) == true and not IsVehicleWheelBrokenOff(vehicle, index) then
+            BreakOffVehicleWheel(vehicle, index, false, true, false, false)
         end
     end
 end
