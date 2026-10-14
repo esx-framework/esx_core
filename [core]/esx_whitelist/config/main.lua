@@ -12,7 +12,7 @@ Config.IdentifierTypes = { license2 = true, license = true, fivem = true }
     verification work is skipped.
 ]]
 Config.Whitelist = {
-    Enabled = true,
+    Enabled = false,
 
     --[[
         Active verification mechanism(s):
