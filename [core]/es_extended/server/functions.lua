@@ -212,12 +212,14 @@ function Core.SavePlayer(xPlayer, cb)
     end
 
     updateHealthAndArmorInMetadata(xPlayer)
+    local coords = xPlayer.getCoords(false, true)
+    local position = coords and json.encode(coords) or ""
     local parameters <const> = {
         json.encode(xPlayer.getAccounts(true)),
         xPlayer.job.name,
         xPlayer.job.grade,
         xPlayer.group,
-        json.encode(xPlayer.getCoords(false, true)),
+        position,
         json.encode(xPlayer.getInventory(true)),
         json.encode(xPlayer.getLoadout(true)),
         json.encode(xPlayer.getMeta()),
@@ -225,7 +227,7 @@ function Core.SavePlayer(xPlayer, cb)
     }
 
     MySQL.prepare(
-        "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ?, `metadata` = ? WHERE `identifier` = ?",
+        "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = COALESCE(NULLIF(?, ''), `position`), `inventory` = ?, `loadout` = ?, `metadata` = ? WHERE `identifier` = ?",
         parameters,
         function(affectedRows)
             if affectedRows == 1 then
@@ -252,12 +254,14 @@ function Core.SavePlayers(cb)
 
     for _, xPlayer in pairs(ESX.Players) do
         updateHealthAndArmorInMetadata(xPlayer)
+        local coords = xPlayer.getCoords(false, true)
+        local position = coords and json.encode(coords) or ""
         parameters[#parameters + 1] = {
             json.encode(xPlayer.getAccounts(true)),
             xPlayer.job.name,
             xPlayer.job.grade,
             xPlayer.group,
-            json.encode(xPlayer.getCoords(false, true)),
+            position,
             json.encode(xPlayer.getInventory(true)),
             json.encode(xPlayer.getLoadout(true)),
             json.encode(xPlayer.getMeta()),
@@ -266,7 +270,7 @@ function Core.SavePlayers(cb)
     end
 
     MySQL.prepare(
-        "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ?, `metadata` = ? WHERE `identifier` = ?",
+        "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = COALESCE(NULLIF(?, ''), `position`), `inventory` = ?, `loadout` = ?, `metadata` = ? WHERE `identifier` = ?",
         parameters,
         function(results)
             if not results then
