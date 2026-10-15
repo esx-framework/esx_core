@@ -1,3 +1,41 @@
+local ESX_MAP_LIMIT <const> = 10000.0
+
+local function isFiniteNumber(value)
+    return type(value) == "number"
+        and value == value
+        and value ~= math.huge
+        and value ~= -math.huge
+end
+
+local function coordsAreSane(coords)
+    local coordsType = type(coords)
+
+    if coordsType ~= "table"
+        and coordsType ~= "vector3"
+        and coordsType ~= "vector4" then
+        return false
+    end
+
+    local x, y, z = coords.x, coords.y, coords.z
+
+    return isFiniteNumber(x)
+        and isFiniteNumber(y)
+        and isFiniteNumber(z)
+        and math.abs(x) <= ESX_MAP_LIMIT
+        and math.abs(y) <= ESX_MAP_LIMIT
+        and math.abs(z) <= ESX_MAP_LIMIT
+end
+
+local function getCoordinateHeading(coords)
+    local value = coords and (coords.heading or coords.w)
+
+    if isFiniteNumber(value) and math.abs(value) <= 360.0 then
+        return value
+    end
+
+    return 0.0
+end
+
 ---@param playerId number
 ---@param identifier string
 ---@param ssn string
@@ -11,6 +49,7 @@
 ---@param coords vector4|{x: number, y: number, z: number, heading: number}
 ---@param metadata table
 ---@return xPlayer
+
 function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
     ---@diagnostic disable-next-line: missing-fields
     local self = {} ---@type xPlayer
@@ -81,21 +120,51 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     end
 
     function self.getCoords(vector, heading)
-        local ped <const> = GetPlayerPed(self.source)
-        local entityCoords <const> = GetEntityCoords(ped)
-        local entityHeading <const> = GetEntityHeading(ped)
+        local coordinates
+        local ped = GetPlayerPed(self.source)
 
-        local coordinates = { x = entityCoords.x, y = entityCoords.y, z = entityCoords.z }
+        if ped and ped ~= 0 and DoesEntityExist(ped) then
+            local entityCoords = GetEntityCoords(ped)
 
-        if vector then
-            coordinates = (heading and vector4(entityCoords.x, entityCoords.y, entityCoords.z, entityHeading) or entityCoords)
-        else
-            if heading then
-                coordinates.heading = entityHeading
+            if coordsAreSane(entityCoords) then
+                coordinates = {
+                    x = entityCoords.x,
+                    y = entityCoords.y,
+                    z = entityCoords.z,
+                    heading = getCoordinateHeading({
+                        heading = GetEntityHeading(ped)
+                    })
+                }
+
+                self.lastCoords = coordinates
             end
         end
 
-        return coordinates
+        if not coordinates then
+            if coordsAreSane(self.lastCoords) then
+                coordinates = self.lastCoords
+            elseif coordsAreSane(self.coords) then
+                coordinates = self.coords
+            else
+                print(("[^3WARNING^7] Could not get valid coordinates for player ^5%s^7; no valid fallback is available."):format(self.source))
+                return nil
+            end
+        end
+
+        local x, y, z = coordinates.x, coordinates.y, coordinates.z
+        local coordinateHeading = getCoordinateHeading(coordinates)
+
+        if vector then
+            return heading and vector4(x, y, z, coordinateHeading) or vector3(x, y, z)
+        end
+
+        local result = { x = x, y = y, z = z }
+
+        if heading then
+            result.heading = coordinateHeading
+        end
+
+        return result
     end
 
     function self.kick(reason)
