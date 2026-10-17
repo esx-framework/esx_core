@@ -8,7 +8,7 @@ use_experimental_fxv2_oal 'yes'
 
 author 'ESX-Framework'
 description 'Whitelist System for ESX Framework'
-version '1.16.0'
+version '1.16.2'
 
 shared_scripts {
     '@esx_lib/imports.lua',

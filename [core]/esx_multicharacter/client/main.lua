@@ -46,7 +46,7 @@ end)
 
 if Config.Relog then
     local relogPending = false
-    
+
     RegisterCommand("relog", function()
         if ESX.PlayerLoaded and not relogPending then
             relogPending = true
@@ -57,8 +57,21 @@ if Config.Relog then
 
             if not ok or type(result) ~= 'table' or not result.success then
                 Multicharacter.canRelog = true
+
+                local reason = 'invalid_callback_response'
+
+                if not ok then
+                    reason = tostring(result)
+                elseif type(result) == 'table' then
+                    reason = result.error or 'unknown'
+                end
+
+                print(('[esx_multicharacter] Relog failed: %s'):format(reason))
+
                 local locale = Locales[Config.Locale] or Locales.en
-                ESX.ShowNotification(locale.UI.action_failed or Locales.en.UI.action_failed)
+                local message = locale.UI['relog_' .. reason] or Locales.en.UI['relog_' .. reason]
+
+                ESX.ShowNotification(message or locale.UI.action_failed or Locales.en.UI.action_failed)
             end
         end
     end, false)

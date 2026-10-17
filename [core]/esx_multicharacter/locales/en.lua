@@ -23,5 +23,10 @@ Locales["en"] = {
         ["play"] = "PLAY",
         ["action_failed"] = "The action could not be completed. Please try again.",
         ["action_pending"] = "Please wait...",
+        ["relog_busy"] = "Your character is still logging out. Please wait.",
+        ["relog_rate_limited"] = "Please wait a moment before switching characters again.",
+        ["relog_not_loaded"] = "Your character is not loaded. Reconnect to the server.",
+        ["relog_disabled"] = "Switching characters is disabled on this server.",
+        ["relog_stale_session"] = "Your character session has changed. Reconnect to the server.",
     }
 }

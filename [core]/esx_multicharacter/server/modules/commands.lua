@@ -82,7 +82,3 @@ ESX.RegisterCommand(
         },
     }
 )
-
-RegisterCommand("forcelog", function(source)
-    TriggerEvent("esx:playerLogout", source)
-end, true)

@@ -269,29 +269,45 @@ function Multicharacter:PlayerDropped(player)
 end
 
 function Multicharacter:Relog(source)
-    if not Config.Relog or not ESX.GetPlayerFromId(source) then return rejected('not_loaded') end
+    if not Config.Relog then
+        return rejected('disabled')
+    end
+
+    if not ESX.GetPlayerFromId(source) then
+        return rejected('not_loaded')
+    end
 
     local previous = self.sessions[source]
-    if previous and previous.phase == 'logout' then return rejected('busy') end
 
-    if not actionLimiter:consume(source) then return rejected('rate_limited') end
+    if previous and previous.phase == 'logout' then
+        return rejected('busy')
+    end
+
+    if not actionLimiter:consume(source) then
+        return rejected('rate_limited')
+    end
 
     local session = { identifier = ESX.GetIdentifier(source), phase = 'logout' }
     self.sessions[source] = session
     self.awaitingRegistration[source] = nil
-    
+
     local finished = promise.new()
-    
+
     TriggerEvent('esx:playerLogout', source, function()
         if self.sessions[source] == session and ESX.GetIdentifier(source) == session.identifier then
             self.sessions[source] = nil
             setupLimiter:reset(source)
-            if session.setupRequested then self:SetupCharacters(source) end
+
+            if session.setupRequested then
+                self:SetupCharacters(source)
+            end
+
             finished:resolve({ success = true })
         else
             finished:resolve(rejected('stale_session'))
         end
     end)
+
     return Citizen.Await(finished)
 end
 
