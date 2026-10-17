@@ -813,7 +813,6 @@ function xLib.game.setVehicleProperties(vehicle, props)
             if completelyBurst ~= nil then
                 SetVehicleTyreFixed(vehicle, index)
             end
-            +
             SetVehicleTyreBurst(vehicle, index, completelyBurst == nil or completelyBurst == true, 1000.0)
         elseif burst == false then
             SetVehicleTyreFixed(vehicle, index)
