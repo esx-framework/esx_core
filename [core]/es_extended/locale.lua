@@ -78,7 +78,14 @@ function Translate(str, ...) -- Translate string
     end
 
     if translations[str] then
-        return translations[str]:format(...)
+        local success, result = pcall(string.format, translations[str], ...)
+
+        if not success then
+            error(("Translation [%s][%s] in resource [%s] failed with %d argument(s): %s")
+                :format(Config.Locale, str, GetCurrentResourceName(), select("#", ...), result), 2)
+        end
+        
+        return result
     end
 
     return ("Translation [%s][%s] does not exist"):format(Config.Locale, str)
