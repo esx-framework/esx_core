@@ -6,7 +6,7 @@ fx_version 'cerulean'
 game 'gta5'
 author 'ESX-Framework'
 description 'Saves/loads character appearances for ESX Legacy.'
-version '1.16.0'
+version '1.16.2'
 lua54 'yes'
 
 client_scripts {

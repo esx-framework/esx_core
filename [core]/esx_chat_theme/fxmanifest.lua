@@ -5,7 +5,7 @@ fx_version 'cerulean'
 game 'common'
 author 'ESX-Framework'
 description 'A ESX Stylised theme for the chat resource.'
-version '1.16.0'
+version '1.16.2'
 
 file 'style.css'
 file 'shadow.js'

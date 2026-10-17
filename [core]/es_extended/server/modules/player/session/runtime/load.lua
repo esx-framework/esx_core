@@ -131,8 +131,27 @@ local function loadPlayer(identifier, playerId, isNew, loading)
         end
     end
 
-    userData.coords = (result.position and result.position ~= '') and json.decode(result.position)
-        or Config.DefaultSpawns[ESX.Math.Random(1, #Config.DefaultSpawns)]
+    local coordinates = decodeJsonObject(result.position)
+
+    if not Core.PlayerClass.IsValidCoordinates(coordinates) then
+        coordinates = Core.PlayerClass.GetDefaultCoordinates()
+
+        if not coordinates then
+            print(('[^1ERROR^7] No valid Config.DefaultSpawns for player ^5%s^7'):format(identifier))
+            return DropPlayer(playerId, 'There was an error loading your character!\nError code: invalid-spawn-config\n\nContact the server administration team.')
+        end
+
+        if result.position and result.position ~= '' then
+            print(('[^3WARNING^7] Invalid saved position for ^5%s^7; using a configured spawn.'):format(identifier))
+        end
+    end
+
+    userData.coords = {
+        x = coordinates.x,
+        y = coordinates.y,
+        z = coordinates.z,
+        heading = coordinates.w or coordinates.heading or 0.0,
+    }
     userData.skin = decodeJsonObject(result.skin, { sex = result.sex == 'f' and 1 or 0 })
     userData.metadata = (result.metadata and result.metadata ~= '') and json.decode(result.metadata) or {}
 
