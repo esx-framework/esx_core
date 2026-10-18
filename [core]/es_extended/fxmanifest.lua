@@ -7,7 +7,7 @@ game 'gta5'
 author 'ESX-Framework'
 description 'The Core resource that provides the functionalities for all other resources.'
 lua54 'yes'
-version '1.16.2'
+version '1.16.3'
 
 shared_scripts {
     '@esx_lib/imports.lua',
