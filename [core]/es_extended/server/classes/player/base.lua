@@ -261,10 +261,12 @@ function Core.PlayerClass.AttachBase(self)
         return self.group
     end
 
-    function self.set(k, v)
+    function self.set(k, v, replicate)
         self.variables[k] = v
 
-        self.triggerEvent('esx:updatePlayerData', 'variables', self.variables)
+        if replicate ~= false then
+            self.triggerEvent('esx:updatePlayerData', 'variables', self.variables)
+        end
     end
 
     function self.get(k)
