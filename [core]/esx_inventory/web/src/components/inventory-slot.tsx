@@ -63,7 +63,7 @@ export default function InventorySlot({
   }
 
   const getSlotClassName = () => {
-    const baseClasses = "aspect-square rounded-xl cursor-pointer transition-all duration-200 bg-mid/40 backdrop-blur-xl border-2 relative"
+    const baseClasses = "aspect-square rounded-xl cursor-pointer transition-all duration-200 bg-mid/90 backdrop-blur-xl border-2 relative"
 
     let borderClasses = "border-light/20 hover:border-light/40"
     if (isSelected) {

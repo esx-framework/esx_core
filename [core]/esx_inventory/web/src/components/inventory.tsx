@@ -71,7 +71,7 @@ export default function Inventory({
 
   return (
     <div className="w-full">
-      <div className="mb-4 p-4 rounded-2xl bg-dark/40 backdrop-blur-xl">
+      <div className="mb-4 p-4 rounded-2xl bg-dark/90 backdrop-blur-xl">
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-2">
             <Weight className="w-4 h-4 text-brand" />
@@ -89,7 +89,7 @@ export default function Inventory({
         </div>
       </div>
 
-      <div className="p-6 rounded-2xl bg-dark/30 backdrop-blur-2xl shadow-2xl relative">
+      <div className="p-6 rounded-2xl bg-dark/90 backdrop-blur-2xl shadow-2xl relative">
         <div className="flex items-center justify-center gap-2 mb-4">
           <div className="text-brand">{icon}</div>
           <h2 className="text-xl font-bold text-lightest">{title}</h2>

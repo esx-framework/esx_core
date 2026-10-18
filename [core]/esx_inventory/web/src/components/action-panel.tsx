@@ -49,7 +49,7 @@ export default function ActionPanel({
         data-drop="use"
         onClick={onUse}
         disabled={(!selectedItem || selectedItem.type !== "item_standard") && !dragFromLeft}
-        className={`${dragFromLeft ? "bg-brand/80 ring-2 ring-brand/50 shadow-xl shadow-brand/50" : "bg-brand hover:bg-brand/90"} text-darkest font-semibold px-8 py-6 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand/20 w-full flex items-center justify-center gap-2`}
+        className={`${dragFromLeft ? "bg-brand/90 ring-2 ring-brand/50 shadow-xl shadow-brand/50" : "bg-brand/90 hover:bg-brand/90"} text-darkest font-semibold px-8 py-6 rounded-xl disabled:opacity-100 disabled:text-darkest/60 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand/20 w-full flex items-center justify-center gap-2`}
       >
         <Hand className="w-5 h-5 pointer-events-none" />
         <span className="pointer-events-none">{t("use")}</span>
@@ -62,7 +62,7 @@ export default function ActionPanel({
           min="1"
           value={amount}
           onChange={(e) => setAmount(Math.max(1, Number.parseInt(e.target.value) || 1))}
-          className="bg-mid/50 backdrop-blur-xl border-light/20 text-lightest text-center rounded-xl pl-10 py-6"
+          className="bg-mid/90 backdrop-blur-xl border-light/20 text-lightest text-center rounded-xl pl-10 py-6"
           placeholder={t("amount")}
         />
       </div>
@@ -72,7 +72,7 @@ export default function ActionPanel({
           data-drop="give"
           onClick={() => (showPlayerList && giveMode === "item" ? setShowPlayerList(false) : onOpenPlayerList())}
           disabled={!selectedItem && !dragFromLeft}
-          className={`${dragFromLeft ? "bg-mid/60 ring-2 ring-brand/30 border-brand/40 shadow-xl shadow-brand/30" : "bg-mid hover:bg-mid/80 border-light/20"} text-lightest font-semibold px-8 py-6 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all border w-full flex items-center justify-center gap-2`}
+          className={`${dragFromLeft ? "bg-mid/90 ring-2 ring-brand/30 border-brand/40 shadow-xl shadow-brand/30" : "bg-mid/90 hover:bg-mid/90 border-light/20"} text-lightest font-semibold px-8 py-6 rounded-xl disabled:opacity-100 disabled:text-lightest/50 disabled:cursor-not-allowed transition-all border w-full flex items-center justify-center gap-2`}
         >
           <Gift className="w-5 h-5 pointer-events-none" />
           <span className="pointer-events-none">{t("give")}</span>
@@ -81,7 +81,7 @@ export default function ActionPanel({
         {canGiveAmmo && (
           <Button
             onClick={() => (showPlayerList && giveMode === "ammo" ? setShowPlayerList(false) : onOpenAmmoList())}
-            className="bg-mid hover:bg-mid/80 border-light/20 text-lightest font-semibold px-8 py-6 rounded-xl transition-all border w-full flex items-center justify-center gap-2 mt-4"
+            className="bg-mid/90 hover:bg-mid/90 border-light/20 text-lightest font-semibold px-8 py-6 rounded-xl transition-all border w-full flex items-center justify-center gap-2 mt-4"
           >
             <Crosshair className="w-5 h-5 pointer-events-none" />
             <span className="pointer-events-none">{t("giveAmmo")}</span>
