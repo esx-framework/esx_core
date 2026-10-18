@@ -7,7 +7,7 @@ lua54 "yes"
 
 author 'ESX-Framework'
 description 'Allows resources to Run tasks at specific intervals.'
-version '1.16.2'
+version '1.16.3'
 
 loadscreen "web/index.html"
 loadscreen_manual_shutdown "yes"

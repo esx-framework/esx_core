@@ -7,7 +7,7 @@ game 'gta5'
 author 'ESX-Framework'
 description 'Allows the player to Pick their characters: Name, Gender, Height and Date-of-birth.'
 lua54 'yes'
-version '1.16.2'
+version '1.16.3'
 
 shared_scripts {
     '@esx_lib/imports.lua',

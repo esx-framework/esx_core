@@ -7,7 +7,7 @@ game 'gta5'
 author 'ESX-Framework'
 description 'A basic table-based menu system for ESX Legacy.'
 lua54 'yes'
-version '1.16.2'
+version '1.16.3'
 
 client_scripts {
 	'@es_extended/imports.lua',

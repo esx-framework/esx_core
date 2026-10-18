@@ -8,7 +8,7 @@ author "ESX-Framework"
 description "Inventory for the ESX framework"
 lua54 "yes"
 use_fxv2_oal "yes"
-version '1.16.2'
+version '1.16.3'
 
 shared_scripts {
     "@esx_lib/imports.lua",
