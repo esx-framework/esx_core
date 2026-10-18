@@ -1,6 +1,36 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
+-- Players whose inventory gained a usable flag, resynced once on the next tick
+-- so registering many items in a row sends one esx:setInventory per player.
+local pendingResync = {}
+local resyncScheduled = false
+
+local function flushInventoryResync()
+    resyncScheduled = false
+
+    local players = pendingResync
+    pendingResync = {}
+
+    for source, xPlayer in pairs(players) do
+        if ESX.Players[source] == xPlayer then
+            TriggerClientEvent("esx:setInventory", source, xPlayer.inventory)
+        end
+    end
+end
+
+---@param xPlayer table
+local function scheduleInventoryResync(xPlayer)
+    pendingResync[xPlayer.source] = xPlayer
+
+    if resyncScheduled then
+        return
+    end
+
+    resyncScheduled = true
+    SetTimeout(0, flushInventoryResync)
+end
+
 ---@param item string
 ---@param cb function
 ---@return nil
@@ -23,7 +53,7 @@ function ESX.RegisterUsableItem(item, cb)
             if inventoryItem.name == item then
                 inventoryItem.usable = true
 
-                TriggerClientEvent("esx:setInventory", xPlayer.source, inventory)
+                scheduleInventoryResync(xPlayer)
                 break
             end
         end
