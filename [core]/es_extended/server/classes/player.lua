@@ -101,7 +101,7 @@
 ---@field isCurrent fun(): boolean                                  # Check if this player session is still active.
 ---@field kick fun(reason: string)                                  # Kick player from server.
 ---@field getPlayTime fun(): number                                  # Get total playtime in seconds.
----@field set fun(k: string, v: any)                                # Set custom variable.
+---@field set fun(k: string, v: any, replicate?: boolean)           # Set custom variable; replicate defaults to true.
 ---@field get fun(k: string): any                                    # Get custom variable.
 --- Metadata Functions
 ---@field getMeta fun(index?: string, subIndex?: string|table): any   # Get metadata value(s).
