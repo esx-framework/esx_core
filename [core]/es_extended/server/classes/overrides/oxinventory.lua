@@ -237,7 +237,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
         return function(accountName, money, reason)
             reason = reason or "unknown"
 
-            if type(money) ~= "number" or money < 0 then
+            if not isValidMoney(money) or money < 0 then
                 return false
             end
 
@@ -286,7 +286,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
         return function(accountName, money, reason)
             reason = reason or "unknown"
 
-            if type(money) ~= "number" or money < 1 then
+            if not isValidMoney(money) or money < 1 then
                 return false
             end
 
@@ -305,8 +305,13 @@ Core.PlayerFunctionOverrides.OxInventory = {
                     return false
                 end
             else
-                self.accounts[account.index].money =
-                    self.accounts[account.index].money + money
+                local balance = self.accounts[account.index].money + money
+
+                if not isValidMoney(balance) then
+                    return false
+                end
+
+                self.accounts[account.index].money = balance
 
                 self.triggerEvent("esx:setAccountMoney", account)
             end
