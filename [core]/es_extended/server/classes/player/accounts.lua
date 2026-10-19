@@ -274,4 +274,58 @@ function Core.PlayerClass.AttachAccounts(self)
             )
         end
     end
+
+    ---Takes money only when the account covers it, as one guarded step that never throws.
+    ---The removal still goes through removeAccountMoney, so inventory overrides apply.
+    ---@param accountName string
+    ---@param money number
+    ---@param reason? string
+    ---@return boolean charged
+    ---@return ESXChargeFailure? failure
+    function self.chargeAccount(accountName, money, reason)
+        local account = self.getAccount(accountName)
+
+        if not account then
+            return false, 'invalid_account'
+        end
+
+        -- A price is charged exactly or not at all, so rounded accounts take no fractions.
+        if not validMoney(money) or money <= 0 or (account.round and money % 1 ~= 0) then
+            return false, 'invalid_amount'
+        end
+
+        local balance = account.money
+
+        if not validMoney(balance) then
+            return false, 'failed'
+        end
+
+        if balance < money then
+            return false, 'insufficient_funds'
+        end
+
+        -- Refused while the player is dropped, since the final save may already be written.
+        if not self.beginAccountOperation() then
+            return false, 'session_closing'
+        end
+
+        local ok, removed = pcall(self.removeAccountMoney, account.name, money, reason)
+
+        self.endAccountOperation()
+
+        if ok and removed == true then
+            return true
+        end
+
+        if not ok then
+            print(('[^3WARNING^7] chargeAccount: removing ^5%s^7 from ^5%s^7 of player ^5%s^7 failed: %s'):format(money, account.name, self.playerId, removed))
+        end
+
+        -- Overrides that return nothing, or fail after taking the money, are judged by the balance.
+        if (not ok or removed == nil) and self.getAccount(account.name).money == balance - money then
+            return true
+        end
+
+        return false, 'failed'
+    end
 end
