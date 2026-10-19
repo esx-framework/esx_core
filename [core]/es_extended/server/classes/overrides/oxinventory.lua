@@ -190,6 +190,13 @@ local function falseMethod()
     end
 end
 
+---Same rule as core's account methods: a real number that a double still holds exactly.
+---@param money any
+---@return boolean
+local function isValidMoney(money)
+    return type(money) == "number" and money == money and math.abs(money) <= 9007199254740991
+end
+
 Core.PlayerFunctionOverrides.OxInventory = {
     getInventory = function(self)
         return function(minimal)
@@ -320,7 +327,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
         return function(accountName, money, reason)
             reason = reason or "unknown"
 
-            if type(money) ~= "number" or money < 1 then
+            if not isValidMoney(money) or money < 1 then
                 return false
             end
 
@@ -332,10 +339,15 @@ Core.PlayerFunctionOverrides.OxInventory = {
 
             money = account.round and ESX.Math.Round(money) or money
 
+            -- Accounts that are not inventory items are plain numbers here, so nothing else stops an overdraft.
+            if account.money < money then
+                return false
+            end
+
             local inventory, isOxAccount = getAccountInventory(account.name)
 
             if isOxAccount then
-                if not inventory or account.money < money then
+                if not inventory then
                     return false
                 end
 
