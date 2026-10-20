@@ -8,6 +8,13 @@
 ---@field round boolean             # Whether amounts are rounded for display.
 ---@field index number              # Index of the account in the player's accounts list.
 
+---@alias ESXChargeFailure
+---| "invalid_account"              # The player has no account with that name.
+---| "invalid_amount"               # Not a positive number, or a fraction on a rounded account.
+---| "insufficient_funds"           # The account holds less than the amount.
+---| "session_closing"              # The player is being dropped and saved.
+---| "failed"                       # The balance is broken or the removal was refused.
+
 ---@class ESXItem
 ---@field name string               # Item identifier (internal name).
 ---@field label string              # Display name of the item.
@@ -55,6 +62,7 @@
 ---@field setAccountMoney fun(accountName: string, money: number, reason?: string)  # Set specific account balance.
 ---@field addAccountMoney fun(accountName: string, money: number, reason?: string)  # Add money to an account.
 ---@field removeAccountMoney fun(accountName: string, money: number, reason?: string) # Remove money from an account.
+---@field chargeAccount fun(accountName: string, money: number, reason?: string): boolean, ESXChargeFailure? # Take money only if the account covers it; never throws.
 ---@field getAccount fun(account: string): ESXAccount?            # Get account data by name.
 ---@field getAccounts fun(minimal?: boolean): ESXAccount[]|table<string,number>  # Get all accounts, optionally minimal.
 --- Inventory Functions
