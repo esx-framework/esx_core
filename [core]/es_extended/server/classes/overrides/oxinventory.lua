@@ -190,6 +190,13 @@ local function falseMethod()
     end
 end
 
+---Same rule as core's account methods: a real number that a double still holds exactly.
+---@param money any
+---@return boolean
+local function isValidMoney(money)
+    return xLib.validation.isSafeNumber(money)
+end
+
 Core.PlayerFunctionOverrides.OxInventory = {
     getInventory = function(self)
         return function(minimal)
@@ -230,7 +237,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
         return function(accountName, money, reason)
             reason = reason or "unknown"
 
-            if type(money) ~= "number" or money < 0 then
+            if not isValidMoney(money) or money < 0 then
                 return false
             end
 
@@ -279,7 +286,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
         return function(accountName, money, reason)
             reason = reason or "unknown"
 
-            if type(money) ~= "number" or money < 1 then
+            if not isValidMoney(money) or money < 1 then
                 return false
             end
 
@@ -298,8 +305,13 @@ Core.PlayerFunctionOverrides.OxInventory = {
                     return false
                 end
             else
-                self.accounts[account.index].money =
-                    self.accounts[account.index].money + money
+                local balance = self.accounts[account.index].money + money
+
+                if not isValidMoney(balance) then
+                    return false
+                end
+
+                self.accounts[account.index].money = balance
 
                 self.triggerEvent("esx:setAccountMoney", account)
             end
@@ -320,7 +332,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
         return function(accountName, money, reason)
             reason = reason or "unknown"
 
-            if type(money) ~= "number" or money < 1 then
+            if not isValidMoney(money) or money < 1 then
                 return false
             end
 
@@ -332,10 +344,15 @@ Core.PlayerFunctionOverrides.OxInventory = {
 
             money = account.round and ESX.Math.Round(money) or money
 
+            -- Accounts that are not inventory items are plain numbers here, so nothing else stops an overdraft.
+            if not isValidMoney(account.money) or account.money < money then
+                return false
+            end
+
             local inventory, isOxAccount = getAccountInventory(account.name)
 
             if isOxAccount then
-                if not inventory or account.money < money then
+                if not inventory then
                     return false
                 end
 

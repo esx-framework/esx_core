@@ -20,6 +20,15 @@ local function roundHalfAway(number)
     return number >= 0 and math.floor(number + 0.5) or math.ceil(number - 0.5)
 end
 
+---A real number a double still holds exactly: finite and within the safe-integer range. Unlike
+---validation.number it neither coerces strings nor rounds, so it fits a boolean guard or a check
+---of a stored balance before arithmetic.
+---@param value any
+---@return boolean
+function xLib.validation.isSafeNumber(value)
+    return type(value) == "number" and isFinite(value) and math.abs(value) <= MAX_SAFE_INTEGER
+end
+
 ---@param value any
 ---@param min? number
 ---@param max? number
