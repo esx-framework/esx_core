@@ -345,7 +345,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
             money = account.round and ESX.Math.Round(money) or money
 
             -- Accounts that are not inventory items are plain numbers here, so nothing else stops an overdraft.
-            if account.money < money then
+            if not isValidMoney(account.money) or account.money < money then
                 return false
             end
 
