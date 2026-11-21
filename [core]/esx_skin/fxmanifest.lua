@@ -6,7 +6,7 @@ fx_version 'cerulean'
 game 'gta5'
 author 'ESX-Framework'
 description "Allows players to customise their character's appearance"
-version '1.16.3'
+version '1.17.0'
 lua54 'yes'
 
 shared_scripts {

@@ -6,7 +6,7 @@ fx_version 'cerulean'
 game 'gta5'
 author 'ESX-Framework'
 description 'A beautiful and simple Persistent Notification system for ESX.'
-version '1.16.3'
+version '1.17.0'
 lua54 'yes'
 
 client_scripts { 'TextUI.lua' }

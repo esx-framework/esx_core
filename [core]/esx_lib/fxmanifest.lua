@@ -10,7 +10,7 @@ lua54 'yes'
 author 'ESX-Framework'
 description 'Official ESX library'
 version '1.0.0'
-legacyversion '1.16.3'
+legacyversion '1.17.0'
 
 ui_page 'html/medal.html'
 
